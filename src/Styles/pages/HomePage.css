@@ -1,0 +1,261 @@
+header {
+  margin: 20px;
+  user-select: none; /* Para a maioria dos navegadores */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+button , img, a{
+  user-select: none; /* Para a maioria dos navegadores */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+nav img {
+  width: 100px;
+}
+
+.menu {
+  display: flex;
+  gap: 30px;
+  margin-right: 20px;
+}
+
+nav button {
+  border: 1px solid rgb(132, 0, 255);
+  background: none;
+  width: 95px;
+  height: 45px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+nav a {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+}
+
+nav button:hover {
+  background-color: rgb(132, 0, 255);
+  color: rgb(255, 255, 255);
+}
+
+.Main {
+  display: flex;
+  margin: 25px;
+  margin-top: 60px;
+  justify-content: space-around;
+  gap: 25px;
+}
+
+h1 {
+  color: white;
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.circulePurple1 {
+  background-color: #8400ffd4;
+  border-radius: 50%;
+  filter: blur(120px);
+  height: 200px;
+  width: 200px;
+  position: absolute;
+  right: -450;
+}
+.circulePurple2 {
+  background-color: #8400ffd4;
+  border-radius: 50%;
+  filter: blur(120px);
+  height: 200px;
+  width: 200px;
+  position: absolute;
+  right: 0;
+}
+
+h2 {
+  color: white;
+  font-size: 30px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.Main p {
+  max-width: 500px;
+  text-align: justify;
+}
+
+.Main img {
+  margin-top: 80px;
+}
+
+.Main a {
+  font-weight: 500;
+  color: #ffffff;
+  text-decoration: inherit;
+}
+.Main a:hover {
+  color: #ffffff;
+}
+
+.Main button {
+  margin: 10px;
+  border-radius: 8px;
+  border: 1px solid rgb(132, 0, 255);
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #141414;
+  cursor: pointer;
+  transition: 0.5s;
+}
+.Main button:hover {
+  border-color: rgb(132, 0, 255);
+  background-color: rgb(132, 0, 255);
+  transition: 0.5s;
+}
+.Main button:focus,
+.Main button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.SobreNos {
+  margin-top: 200px;
+  /* margin: 25px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+
+.SobreNos p {
+  margin-top: 20px;
+  max-width: 800px;
+  text-align: justify;
+}
+
+.SectionComoFunciona {
+  margin: 25px;
+}
+
+.SectionComoFunciona h2 {
+  margin-top: 200px;
+  text-align: center;
+}
+
+.ComoFunciona {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 150px;
+}
+.ComoFuncionaText {
+  color: white;
+  height: 120px;
+  padding: 20px;
+  text-align: justify;
+  max-width: 400px;
+  font-size: 15px;
+  background-color: #212224;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  margin: 10px;
+  transform: scale(1);
+  transition: 0.5s, border-color 0.3s;
+}
+
+.ComoFuncionaText:hover {
+  transition: 0.5s, border-color 0.3s;
+  transform: scale(1.1);
+  background-color: #141414;
+  border-color: rgb(132, 0, 255);
+}
+
+.ComeceAgora {
+  display: flex;
+  flex-direction: column;
+  margin-left: 50px;
+  margin-top: 150px;
+  margin-bottom: 150px;
+}
+
+.ComeceAgora button {
+  margin-top: 20px;
+  border-radius: 8px;
+  border: 1px solid rgb(132, 0, 255);
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #141414;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.ComeceAgora button:hover {
+  border-color: rgb(132, 0, 255);
+  background-color: rgb(132, 0, 255);
+  transition: 0.5s;
+}
+
+.duvida {
+  background-color: #141414;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  margin: 50px;
+}
+
+
+.barra{
+  margin: auto;
+  margin-bottom: 5px;
+  background-color: aliceblue;
+  opacity: 30%;
+  width: 90em;
+  height: 2px;
+}       
+.rodape{
+  display: flex;
+  margin: 10px;
+  justify-content: center;
+  gap: 10px
+}
+
+.rodape1{
+  background-color: #141414;
+  height: 20px;
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  font-size: 9pt;
+}
+
+.rodape2{
+  background-color: #141414;
+  height: 20px;
+  align-items: end;
+  margin-left: 530px;
+  gap: 10px;
+  font-size: 9pt;
+} 
