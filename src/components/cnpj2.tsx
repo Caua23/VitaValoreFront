@@ -11,10 +11,10 @@ import InputMask from 'react-input-mask';
 }
 
 
-function CnpjInput({ value, onChange, placeholder = "Digite seu CNPJ", required = false, className }: CnpjInputProps) {
+function Cnpj2({ value, onChange, placeholder = "Digite seu CNPJ", required = false, className }: CnpjInputProps) {
   return (
-    <div className="form-group">
-      <label>CNPJ</label>
+    
+      
       <InputMask
         className={className}
         mask="99.999.999/9999-99"
@@ -25,8 +25,8 @@ function CnpjInput({ value, onChange, placeholder = "Digite seu CNPJ", required 
       >
         {/* {(inputProps: any) => <input {...inputProps} type="text" className="form-control" />} */}
       </InputMask>
-    </div>
+    
   );
 }
 
-export default CnpjInput;
+export default Cnpj2;

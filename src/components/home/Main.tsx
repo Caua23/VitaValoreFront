@@ -1,3 +1,5 @@
+// import estrategia from '../../assets/estrategia.png';
+import fintech from '../../assets/fintech.png';
 function Main() {
     return (
         <main>
@@ -21,7 +23,7 @@ function Main() {
                     </p>
                 </div>
                 <div>
-                    <img src="https://placehold.jp/959x615" alt="" />
+                    <img src={fintech} width={200} alt="" />
                 </div>
             </section>
 
@@ -63,7 +65,7 @@ function Main() {
             <div className="ComeceAgora">
                 <h2>Venha fazer parte!</h2>
                 <a href="/auth/register">
-                    <button>Comece Agora</button>
+                    <button>Cadastrar-se</button>
                 </a>
             </div>
 
