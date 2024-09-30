@@ -5,7 +5,12 @@ header {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
-
+p,a,button{
+  color: white;
+}
+.Cadastrar-se{
+  color: white;
+}
 nav {
   display: flex;
   align-items: center;
