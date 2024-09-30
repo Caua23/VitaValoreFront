@@ -1,12 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
 
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  
 }
-
+body{
+  background-color: #141414;  
+}
 :root {
   font-family: Montserrat,Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -20,4 +24,4 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
+} 

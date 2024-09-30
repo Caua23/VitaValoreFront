@@ -13,7 +13,7 @@ function Footer() {
             <div className='rodape'>
                 <div className='rodape1'>
                     <p>Copyright © 2024. Todos os direitos reservados.</p>
-                    <p>Desenvolvido por Vita Valore</p>
+                    <p>Equipe Vita Valore</p>
                     
                 </div>
                 <div className='rodape2'>
