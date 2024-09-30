@@ -65,7 +65,7 @@ function Main() {
             <div className="ComeceAgora">
                 <h2>Venha fazer parte!</h2>
                 <a href="/auth/register">
-                    <button>Cadastrar-se</button>
+                    <button className='Cadastrar-se'>Cadastrar-se</button>
                 </a>
             </div>
 

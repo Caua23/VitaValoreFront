@@ -1,4 +1,4 @@
-"use client"
+
 
 import * as React from "react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
@@ -17,7 +17,11 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
-export const description = "An interactive bar chart"
+import {
+  Wallet,
+  ShoppingBasket
+
+} from 'lucide-react'
 
 const chartData = [
   { date: "2024-04-01", Compras: 222, Avaliacao: 150 },
@@ -127,7 +131,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
- function Dashboard() {
+function Dashboard() {
   const [activeChart, setActiveChart] =
     React.useState<keyof typeof chartConfig>("Compras")
 
@@ -138,89 +142,119 @@ const chartConfig = {
     }),
     []
   )
+  var valoreVendas = 10.432
+  var maisVendido = "Barrinha Fit";
+  var maisAvaliado = "Whey 200g";
 
   return (
-    <Card className="h-full bg-black p-2">
-      <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row bg-black">
-        <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-          <CardTitle className="text-neutral-100">Vendas do mês</CardTitle>
-          <CardDescription className="text-neutral-200">
-             total de compras dos últimos 3 meses
-          </CardDescription>
-        </div>
-        <div className="flex">
-          {["Compras", "Avaliacao"].map((key) => {
-            const chart = key as keyof typeof chartConfig
-            return (
-              <button
-                key={chart}
-                data-active={activeChart === chart}
-                className=" text-neutral-200 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
-                onClick={() => setActiveChart(chart)}
-              >
-                <span className="text-xs text-muted-foreground text-neutral-200">
-                  {chartConfig[chart].label}
-                </span>
-                <span className="text-lg font-bold leading-none sm:text-3xl">
-                  {total[key as keyof typeof total].toLocaleString()}
-                </span>
-              </button>
-            )
-          })}
-        </div>
-      </CardHeader>
-      <CardContent className="px-2 sm:p-6">
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
-        >
-          <BarChart
-            
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
+    <div className="flex ">
+
+      <Card className="h-1200px border-none mt-2 bg-black p-2">
+        <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row bg-black">
+          <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
+            <CardTitle className="text-neutral-100">Vendas do mês</CardTitle>
+            <CardDescription className="text-neutral-200">
+              total de compras dos últimos 3 meses
+            </CardDescription>
+          </div>
+          <div className="flex">
+            {["Compras", "Avaliacao"].map((key) => {
+              const chart = key as keyof typeof chartConfig
+              return (
+                <button
+                  key={chart}
+                  data-active={activeChart === chart}
+                  className=" text-neutral-200 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
+                  onClick={() => setActiveChart(chart)}
+                >
+                  <span className="text-xs text-muted-foreground text-neutral-200">
+                    {chartConfig[chart].label}
+                  </span>
+                  <span className="text-lg font-bold leading-none sm:text-3xl">
+                    {total[key as keyof typeof total].toLocaleString()}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        </CardHeader>
+        <CardContent className="px-2 sm:p-6">
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-auto h-[250px] w-full"
           >
-            <CartesianGrid  vertical={false} />
-            <XAxis
-            
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value)
-                return date.toLocaleDateString("pt-br", {
-                  month: "short",
-                  day: "numeric",
-                })
+            <BarChart
+
+              accessibilityLayer
+              data={chartData}
+              margin={{
+                left: 12,
+                right: 12,
               }}
-            />
-            <ChartTooltip
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={32}
+                tickFormatter={(value) => {
+                  const date = new Date(value)
+                  return date.toLocaleDateString("pt-br", {
+                    month: "short",
+                    day: "numeric",
+                  })
+                }}
+              />
+              <ChartTooltip
                 animationDuration={200}
-               
-              content={
-                <ChartTooltipContent
-                  className="w-[150px] bg-zinc-200"
-                  nameKey="views"
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("pt-br", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })
-                  }}
-                />
-              }
-            />
-            <Bar dataKey={activeChart}  fill={`var(--color-${activeChart})`} />
-          </BarChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+
+                content={
+                  <ChartTooltipContent
+                    className="w-[150px] bg-zinc-200"
+                    nameKey="views"
+                    labelFormatter={(value) => {
+                      return new Date(value).toLocaleDateString("pt-br", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })
+                    }}
+                  />
+                }
+              />
+              <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+      <div className="flex flex-wrap gap-7 m-3">
+        <div className="flex-1 min-w-[220px] justify-center bg-black h-52 p-10 items-center rounded-3xl">
+          <Wallet size={35} className="text-neutral-50 " />
+          <p className="text-neutral-500 mt-2 text-xs">Seus ganhos foram:</p>
+          <p className="font-bold mt-2 text-3xl">R$ {valoreVendas}</p>
+        </div>
+                
+        {maisVendido && (<div className="flex-1 min-w-[220px] justify-center bg-black h-52 p-10 items-center rounded-3xl">
+          <ShoppingBasket size={35} className="text-neutral-50 " />
+          <p className="text-neutral-500 mt-2 text-xs">Produto mais vendido:</p>
+          <p className="font-bold mt-2 text-3xl">{maisVendido}</p>
+        </div>)}
+
+        {maisAvaliado && (
+          <div className="flex-1 min-w-[220px] justify-center bg-black h-52 p-10 items-center rounded-3xl">
+            <ShoppingBasket size={35} className="text-neutral-50 " />
+            <p className="text-neutral-500 mt-2 text-xs">Produto mais bem avaliado:</p>
+            <p className="font-bold mt-2 text-3xl">{maisAvaliado}</p>
+          </div>
+        )}
+      </div>
+
+    </div>
+
+
   )
 }
 

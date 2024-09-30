@@ -77,7 +77,7 @@ function FormLogin() {
                     />
                 </div>
 
-                <p>Não tem uma conta? <a href="/register" className="register">Cadastre-se</a></p>
+                <p>Não tem uma conta? <a href="/auth/register" className="register">Cadastre-se</a></p>
                 <p className="error">{errorMessage}</p>
                 <button type="submit" className="submit-button">Entrar</button>
             </form>
