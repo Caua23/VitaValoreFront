@@ -1,3 +1,6 @@
+
+
+
 header {
   margin: 20px;
   user-select: none; /* Para a maioria dos navegadores */
@@ -124,7 +127,7 @@ h2 {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #141414;
+  
   cursor: pointer;
   transition: 0.5s;
 }
@@ -208,7 +211,7 @@ h2 {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #141414;
+  background: none;
   cursor: pointer;
   transition: 0.5s;
 }
@@ -220,7 +223,7 @@ h2 {
 }
 
 .duvida {
-  background-color: #141414;
+  background: none;
   height: 100px;
   display: flex;
   flex-direction: column;
@@ -230,7 +233,16 @@ h2 {
   padding: 10px;
   margin: 50px;
 }
+.duvida a{
+  transition: 0.5s;
+  text-decoration: solid underline;
+}
 
+.duvida a:hover{
+  transition: 0.5s;
+  color: rgb(132, 0, 255);
+  text-decoration: solid dashed;
+}
 
 .barra{
   margin: auto;
@@ -248,7 +260,7 @@ h2 {
 }
 
 .rodape1{
-  background-color: #141414;
+  background: none;
   height: 20px;
   display: flex;
   justify-content: space-around;
@@ -257,10 +269,19 @@ h2 {
 }
 
 .rodape2{
-  background-color: #141414;
+  background: none;
   height: 20px;
   align-items: end;
   margin-left: 530px;
   gap: 10px;
   font-size: 9pt;
 } 
+.rodape2 a{
+  transition: 0.5s;
+  text-decoration: solid underline;
+}
+.rodape2 a:hover{
+  transition: 0.5s;
+  color: rgb(132, 0, 255);
+  text-decoration: solid dashed;
+}

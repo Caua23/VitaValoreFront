@@ -1,7 +1,7 @@
 
-function user() {
+function UserData() {
     return (
         <div>user</div>
     )
 }
-export default user;
+export default UserData;

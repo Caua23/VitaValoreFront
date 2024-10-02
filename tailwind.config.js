@@ -6,12 +6,21 @@ module.exports = {
   ],
   theme: {
   	extend: {
+
+		boxShadow: {
+			white: '0 10px 20px rgba(255, 255, 255, 0.3)',
+		  },
+
   		colors: {
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
   				foreground: 'hsl(var(--primary-foreground))'
   			},
   			'purple-primary': '#8400ff',
+			  secondary: {
+				DEFAULT: '#141414', // Valor da cor secondary
+				foreground: 'hsl(var(--primary-foreground))', // Manter o foreground da cor primary
+			  },
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
