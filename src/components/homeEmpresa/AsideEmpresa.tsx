@@ -1,10 +1,10 @@
 import { MoreVertical } from "lucide-react";
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext, useState, useEffect } from "react";
 import logo from "../../assets/Logo.png"; // Substitua pela sua imagem se necessário
 import { SidebarItemProps } from "../../interface/SidebarProps";
 import { SidebarProps } from "react-pro-sidebar";
-import Cookies from 'js-cookie';
-import { redirect, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,6 +35,8 @@ import {
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import Cnpj2 from "../cnpj2";
+import { Avatar } from "@mui/material";
+import { deepOrange } from "@mui/material/colors";
 const SidebarContext = createContext<{ expanded: boolean }>({
   expanded: false,
 });
@@ -45,6 +47,15 @@ export default function Sidebar({ children }: SidebarProps) {
   const [email, setEmail] = useState("");
   const [cnpj, setCnpj] = useState("");
   const [password, setPassword] = useState("");
+  const [nameEmpresa, setNameEmpresa] = useState("");
+  const [emailEmpresa, setEmailEmpresa] = useState("");
+
+  const navigate = useNavigate();
+  const logout = () => {
+    Cookies.remove("Bearer");
+    navigate("/auth/login");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -66,27 +77,29 @@ export default function Sidebar({ children }: SidebarProps) {
       if (!token) {
         Cookies.remove("Bearer");
         console.error("Token ausente");
-        redirect("/auth/login");
-        return;
+
+        return navigate("/auth/login");
       }
 
       // Fazer a requisição para obter o ID da empresa a partir do token
-      const idTokenResponse = await fetch(`${apiUrl}/Empresa/verification/${token}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
-        },
-      });
+      const idTokenResponse = await fetch(
+        `${apiUrl}/Empresa/verification/${token}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!idTokenResponse.ok) {
         throw new Error("Falha ao verificar o token");
       }
 
       const idTokenText = await idTokenResponse.text();
-      const { id } = JSON.parse(idTokenText); 
+      const { id } = JSON.parse(idTokenText);
 
-      
       const updateResponse = await fetch(`${apiUrl}/Empresa/Atualizar/${id}`, {
         method: "POST",
         headers: {
@@ -110,6 +123,49 @@ export default function Sidebar({ children }: SidebarProps) {
     }
   };
 
+  const getEmpresa = async () => {
+    const apiUrl = import.meta.env.VITE_VITAVALORE_API_URL;
+    if (!apiUrl) {
+      console.error("API URL não configurada");
+      return;
+    }
+
+    try {
+      const token = Cookies.get("Bearer");
+      if (!token) {
+        Cookies.remove("Bearer");
+        console.error("Token ausente");
+        navigate("/auth/login");
+        return;
+      }
+      const idTokenResponse = await fetch(
+        `${apiUrl}/Empresa/verification/${token}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!idTokenResponse.ok) {
+        throw new Error("Falha ao verificar o token");
+      }
+
+      const idTokenText = await idTokenResponse.text();
+      const data = JSON.parse(idTokenText);
+      console.table(data);
+      setNameEmpresa(data.name);
+      setEmailEmpresa(data.email);
+    } catch (error) {
+      console.error("Erro:", error);
+    }
+  };
+
+  useEffect(() => {
+    getEmpresa();
+  }, []);
   return (
     <aside
       className="h-screen fixed z-10 top-0 bottom-0"
@@ -125,30 +181,36 @@ export default function Sidebar({ children }: SidebarProps) {
               expanded ? "w-20" : "w-0"
             }`}
           />
+         
         </div>
 
         <SidebarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">{children}</ul>
         </SidebarContext.Provider>
 
+           
+
         <div className="border-t flex p-3 items-center">
-          <img
-            src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
-            alt=""
-            className="select-none w-10 h-10 rounded-md"
+          <Avatar
+            sx={{ bgcolor: deepOrange[500] }}
+            alt={nameEmpresa}
+            src="/broken-image.jpg"
           />
+
           <div
             className={`flex justify-between items-center overflow-hidden transition-all ${
               expanded ? "w-52 ml-3" : "w-0"
             }`}
           >
             <div className="leading-4 mr-5">
-              <h4 className="font-semibold text-neutral-50">John Doe</h4>
-              <span className="text-xs text-gray-400">johndoe@gmail.com</span>
+              <h4 className="font-bold text-xs text-neutral-50">
+                {nameEmpresa}
+              </h4>
+              <span className="text-xs text-gray-400">{emailEmpresa}</span>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="default" className="  ">
+                <Button variant="default" className=" border-none ">
                   <MoreVertical size={20} />
                 </Button>
               </DropdownMenuTrigger>
@@ -252,18 +314,21 @@ export default function Sidebar({ children }: SidebarProps) {
                       </form>
                     </DialogContent>
                   </Dialog>
-                  <DropdownMenuItem className="text-stone-50">
+                  <DropdownMenuItem className="text-stone-50 cursor-pointer">
                     <CreditCard className="mr-2 h-4 w-4" />
                     <span>Planos</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="text-stone-50">
+                  <DropdownMenuItem
+                    className="text-stone-50 cursor-pointer"
+                    onClick={() => navigate("/Empresa/settings")}
+                  >
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Configurações</span>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem className="text-stone-50">
+                <DropdownMenuItem className="text-stone-50 cursor-pointer">
                   <a
                     href="https://github.com/caua23"
                     target="_blank"
@@ -273,12 +338,18 @@ export default function Sidebar({ children }: SidebarProps) {
                     <span>GitHub</span>
                   </a>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-stone-50">
+                <DropdownMenuItem
+                  className="text-stone-50 cursor-pointer"
+                  onClick={() => navigate("/Empresa/faqs")}
+                >
                   <LifeBuoy className="mr-2 h-4 w-4" />
                   <span>Ajuda</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-stone-50">
+                <DropdownMenuItem
+                  className="text-stone-50 cursor-pointer"
+                  onClick={logout}
+                >
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Sair</span>
                 </DropdownMenuItem>

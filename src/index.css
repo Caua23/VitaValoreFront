@@ -8,9 +8,16 @@
   box-sizing: border-box;
   
 }
-body{
-  background-color: #141414;  
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none; /* Para Chrome, Safari e Opera */
+    margin: 0; /* Remove margens */
 }
+
+input[type="number"] {
+    -moz-appearance: textfield; /* Para Firefox */
+}
+
 :root {
   font-family: Montserrat,Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -18,7 +25,7 @@ body{
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.966);
-  background-color: #141414;
+
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
