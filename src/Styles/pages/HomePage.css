@@ -237,7 +237,9 @@ h2 {
   transition: 0.5s;
   text-decoration: solid underline;
 }
-
+body {
+  overflow-x: hidden;
+}
 .duvida a:hover{
   transition: 0.5s;
   color: rgb(132, 0, 255);

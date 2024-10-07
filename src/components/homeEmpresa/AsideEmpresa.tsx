@@ -315,7 +315,7 @@ export default function Sidebar({ children }: SidebarProps) {
                     </DialogContent>
                   </Dialog>
                   <DropdownMenuItem className="text-stone-50 cursor-pointer">
-                    <CreditCard className="mr-2 h-4 w-4" />
+                    <CreditCard className="mr-2 h-4 w-4" onClick={() => navigate("/Empresa/Planos")}/>
                     <span>Planos</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
