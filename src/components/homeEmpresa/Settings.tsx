@@ -13,14 +13,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import Alert from "@mui/material/Alert"; // Certifique-se de que está importando o Alert corretamente
+import Alert from "@mui/material/Alert";
 import { TokenResponse } from "@/interface/TokenResponse";
 import "../../Styles/Components/Alert.css";
 function Configuracao() {
   const [senha, setSenha] = useState("");
   const [senhaNova, setSenhaNova] = useState("");
   const [repetirSenha, setRepetirSenha] = useState("");
-  const [alertMessage, setAlertMessage] = useState(""); // Estado para mensagem de alerta
+  const [alertMessage, setAlertMessage] = useState("");
   const navigate = useNavigate();
 
   const apiUrl = import.meta.env.VITE_VITAVALORE_API_URL;
@@ -95,7 +95,7 @@ function Configuracao() {
       }
 
       setAlertMessage("Senha Atualizada com sucesso.");
-      console.log("Senha alterada com sucesso");
+
     } catch (error) {
       console.error(error);
       setAlertMessage("Erro ao atualizar a senha.");
@@ -124,17 +124,19 @@ function Configuracao() {
         },
       });
 
-      const data = await response.json();
       if (!response.ok) {
+        const data = await response.json();
         throw new Error(data.message);
       }
 
-      console.log(data);
-      logout();
+
+      Cookies.remove("Bearer");
+      navigate("/auth/register");
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao deletar:", error);
     }
   };
+
 
   return (
     <>
