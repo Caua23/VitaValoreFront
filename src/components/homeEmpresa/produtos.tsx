@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ProdutosComponent from "../ProdutosComponent";
-import ProdutosProps from "../../interface/ProdutosProps";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
+import { ProdutosProps } from "@/interface/ProdutosProps";
 
 function Produtos() {
   const navigate = useNavigate();
@@ -75,7 +76,8 @@ function Produtos() {
     }
   };
 
-  const getProdutos = async () => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const getProdutos = useCallback(async () => {
     try {
       const empresaData = await getEmpresa();
       const token = Cookies.get("Bearer");
@@ -109,22 +111,23 @@ function Produtos() {
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    getProdutos();
   }, []);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    console.log(novoProduto); // Exibe o novoProduto
-  }, [novoProduto]);
+    getProdutos();
+  }, [getProdutos]);
 
   if (loading) {
-    return <p className="text-center text-white font-bold text-2xl">Carregando...</p>;
+    return (
+      <p className="text-center text-white font-bold text-2xl">Carregando...</p>
+    );
   }
 
   if (error) {
-    return <p className="text-center text-red-700 font-bold text-2xl">{error}</p>;
+    return (
+      <p className="text-center text-red-700 font-bold text-2xl">{error}</p>
+    );
   }
 
   const handleAddProductClick = () => {
@@ -142,8 +145,8 @@ function Produtos() {
       email: "",
     });
     setSuccessMessage("");
-    setError(""); 
-    setDescricaoLength(0); 
+    setError("");
+    setDescricaoLength(0);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -192,14 +195,13 @@ function Produtos() {
         ...prev,
         descricao: value,
       }));
-      setDescricaoLength(value.length); 
+      setDescricaoLength(value.length);
     }
   };
 
-
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between mt-5">
         <h1 className="text-center text-white font-bold text-3xl">Produtos</h1>
         <Button
           className="bg-green-500 hover:bg-green-700 duration-500 p-5 text-white font-bold mr-10"
@@ -210,8 +212,8 @@ function Produtos() {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <Card className="w-96 bg-primary text-white">
+        <div className="fixed inset-0 flex z-50 items-center justify-center bg-black bg-opacity-50">
+          <Card className="w-96 bg-primary text-white ">
             <CardHeader>
               <CardTitle>Adicionar Produto</CardTitle>
               <CardDescription className="text-neutral-400">
@@ -254,7 +256,9 @@ function Produtos() {
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="descricao">Descrição</Label>
-                  <p className="text-gray-400 text-xs opacity-70">{descricaoLength}/600</p> 
+                  <p className="text-gray-400 text-xs opacity-70">
+                    {descricaoLength}/600
+                  </p>
                   <Input
                     id="descricao"
                     name="descricao"
@@ -301,19 +305,7 @@ function Produtos() {
         </p>
 
         {produtos && produtos.length > 0 ? (
-          console.log(produtos),
-          produtos.map((produto) => (
-            <ProdutosComponent
-
-              id={produto.id}
-              name={produto.name}
-              preco={produto.preco}
-              imagem={produto.imagem}
-              descricao={produto.descricao}
-              marca={produto.marca}
-              status={produto.status}
-            />
-          ))
+          <ProdutosComponent data={produtos} />
         ) : (
           <p className="text-center text-white font-bold text-2xl">
             Nenhum Produto encontrado

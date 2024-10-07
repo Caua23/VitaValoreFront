@@ -14,7 +14,7 @@ function FormLogin() {
 
         const loginData = { email, password };
         const apiUrl = import.meta.env.VITE_VITAVALORE_API_URL;
-
+        
         if (!apiUrl) {
             console.error('API URL não configurada');
             return;

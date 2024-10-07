@@ -4,7 +4,7 @@ function Main() {
     return (
         <main>
             <section className="Main">
-                <div>
+                <div className='mt-10'>
                     <div className="circulePurple1"></div>
                     <h1>Vita Valore</h1>
                     <h2>Anuncie seus produtos fitness</h2>
