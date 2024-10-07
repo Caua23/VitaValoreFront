@@ -155,7 +155,6 @@ export default function Sidebar({ children }: SidebarProps) {
 
       const idTokenText = await idTokenResponse.text();
       const data = JSON.parse(idTokenText);
-      console.table(data);
       setNameEmpresa(data.name);
       setEmailEmpresa(data.email);
     } catch (error) {

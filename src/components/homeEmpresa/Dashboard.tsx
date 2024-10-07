@@ -237,7 +237,7 @@ function Dashboard() {
             </ChartContainer>
           </CardContent>
         </Card>
-        <div className="flex flex-wrap justify-center items-center  gap-5 m-3">
+        <div className="flex flex-wrap justify-center items-center  gap-6 m-3">
           <div className="flex-1 min-w-[220px] justify-center bg-black h-60 p-10 items-center rounded-3xl">
             <PiggyBank size={35} className="text-neutral-50 " />
             <p className="text-neutral-500  text-xs">Seus ganhos foram:</p>

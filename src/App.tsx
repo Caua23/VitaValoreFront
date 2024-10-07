@@ -18,9 +18,11 @@ function App() {
         <Route
           path="/Empresa/*"
           element={
-            <ProtectedRoute>
-              <HomeEmpresa />
-            </ProtectedRoute>
+          <ProtectedRoute>
+            <HomeEmpresa />
+          </ProtectedRoute>
+              
+          
           }
         />
       </Routes>
