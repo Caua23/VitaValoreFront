@@ -1,4 +1,4 @@
-import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import {  CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
 import {
   Card,
@@ -11,8 +11,6 @@ import {
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";

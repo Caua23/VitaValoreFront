@@ -1,3 +1,5 @@
+
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
@@ -15,12 +17,13 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-
-
 import { ShoppingBasket, PiggyBank } from "lucide-react";
 import { Button } from "../ui/button";
-import DataTable from "./dataTable";
+import DataTable from "./Dashbord/dataTable";
 import FooterEmpresa from "./footerEmpresa";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { GetEmpresa } from "@/interface/GetEmpresa";
 
 const chartData = [
   { date: "2024-04-01", Compras: 222, Avaliacao: 150 },
@@ -31,69 +34,6 @@ const chartData = [
   { date: "2024-04-06", Compras: 301, Avaliacao: 40 },
   { date: "2024-04-07", Compras: 245, Avaliacao: 180 },
   { date: "2024-04-08", Compras: 409, Avaliacao: 50 },
-  { date: "2024-04-09", Compras: 59, Avaliacao: 110 },
-  { date: "2024-04-10", Compras: 261, Avaliacao: 190 },
-  { date: "2024-04-11", Compras: 327, Avaliacao: 70 },
-  { date: "2024-04-12", Compras: 292, Avaliacao: 210 },
-  { date: "2024-04-13", Compras: 342, Avaliacao: 180 },
-  { date: "2024-04-14", Compras: 137, Avaliacao: 220 },
-  { date: "2024-04-15", Compras: 120, Avaliacao: 170 },
-  { date: "2024-04-16", Compras: 138, Avaliacao: 190 },
-  { date: "2024-04-17", Compras: 446, Avaliacao: 60 },
-  { date: "2024-04-18", Compras: 364, Avaliacao: 10 },
-  { date: "2024-04-19", Compras: 243, Avaliacao: 180 },
-  { date: "2024-04-20", Compras: 89, Avaliacao: 150 },
-  { date: "2024-04-21", Compras: 137, Avaliacao: 200 },
-  { date: "2024-04-22", Compras: 224, Avaliacao: 170 },
-  { date: "2024-04-23", Compras: 138, Avaliacao: 230 },
-  { date: "2024-04-24", Compras: 387, Avaliacao: 290 },
-  { date: "2024-04-25", Compras: 215, Avaliacao: 250 },
-  { date: "2024-04-26", Compras: 75, Avaliacao: 130 },
-  { date: "2024-04-27", Compras: 383, Avaliacao: 20 },
-  { date: "2024-04-28", Compras: 122, Avaliacao: 180 },
-  { date: "2024-04-29", Compras: 315, Avaliacao: 240 },
-  { date: "2024-04-30", Compras: 454, Avaliacao: 380 },
-  { date: "2024-05-01", Compras: 165, Avaliacao: 220 },
-  { date: "2024-05-02", Compras: 293, Avaliacao: 310 },
-  { date: "2024-05-03", Compras: 247, Avaliacao: 190 },
-  { date: "2024-05-04", Compras: 385, Avaliacao: 75 },
-  { date: "2024-05-05", Compras: 481, Avaliacao: 90 },
-  { date: "2024-05-06", Compras: 498, Avaliacao: 120 },
-  { date: "2024-05-07", Compras: 388, Avaliacao: 100 },
-  { date: "2024-05-08", Compras: 149, Avaliacao: 210 },
-  { date: "2024-05-09", Compras: 227, Avaliacao: 180 },
-  { date: "2024-05-10", Compras: 293, Avaliacao: 330 },
-  { date: "2024-05-11", Compras: 335, Avaliacao: 270 },
-  { date: "2024-05-12", Compras: 197, Avaliacao: 240 },
-  { date: "2024-05-13", Compras: 197, Avaliacao: 160 },
-  { date: "2024-05-14", Compras: 448, Avaliacao: 90 },
-  { date: "2024-05-15", Compras: 473, Avaliacao: 380 },
-  { date: "2024-05-16", Compras: 338, Avaliacao: 5 },
-  { date: "2024-05-17", Compras: 499, Avaliacao: 20 },
-  { date: "2024-05-18", Compras: 315, Avaliacao: 100 },
-  { date: "2024-05-19", Compras: 235, Avaliacao: 180 },
-  { date: "2024-05-20", Compras: 177, Avaliacao: 230 },
-  { date: "2024-05-21", Compras: 82, Avaliacao: 140 },
-  { date: "2024-05-22", Compras: 81, Avaliacao: 120 },
-  { date: "2024-05-23", Compras: 252, Avaliacao: 290 },
-  { date: "2024-05-24", Compras: 294, Avaliacao: 220 },
-  { date: "2024-05-25", Compras: 201, Avaliacao: 250 },
-  { date: "2024-05-26", Compras: 213, Avaliacao: 170 },
-  { date: "2024-05-27", Compras: 420, Avaliacao: 60 },
-  { date: "2024-05-28", Compras: 233, Avaliacao: 190 },
-  { date: "2024-05-29", Compras: 78, Avaliacao: 130 },
-  { date: "2024-05-30", Compras: 340, Avaliacao: 280 },
-  { date: "2024-05-31", Compras: 178, Avaliacao: 230 },
-  { date: "2024-06-01", Compras: 178, Avaliacao: 200 },
-  { date: "2024-06-02", Compras: 470, Avaliacao: 110 },
-  { date: "2024-06-03", Compras: 103, Avaliacao: 160 },
-  { date: "2024-06-04", Compras: 439, Avaliacao: 380 },
-  { date: "2024-06-05", Compras: 88, Avaliacao: 140 },
-  { date: "2024-06-06", Compras: 294, Avaliacao: 150 },
-  { date: "2024-06-07", Compras: 323, Avaliacao: 52 },
-  { date: "2024-06-08", Compras: 385, Avaliacao: 220 },
-  { date: "2024-06-09", Compras: 438, Avaliacao: 180 },
-  { date: "2024-06-10", Compras: 155, Avaliacao: 200 },
   { date: "2024-06-11", Compras: 92, Avaliacao: 150 },
   { date: "2024-06-12", Compras: 492, Avaliacao: 53 },
   { date: "2024-06-13", Compras: 81, Avaliacao: 130 },
@@ -129,19 +69,13 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
+  const [ultimasVendasData, setUltimasVendasData] = React.useState([]);
 
-
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
-
-function Dashboard() {
+  const navigate = useNavigate();
   const [activeChart, setActiveChart] =
     React.useState<keyof typeof chartConfig>("Compras");
-
+  const [mostReviewed, setMostReviewed] = React.useState<string | null>(null);
   const total = React.useMemo(
     () => ({
       Compras: chartData.reduce((acc, curr) => acc + curr.Compras, 0),
@@ -149,13 +83,93 @@ function Dashboard() {
     }),
     []
   );
-  const valoreVendas = 10.432;
-  const maisVendido = "Barrinha Fit";
-  const maisAvaliado = "Whey 200g";
+  const maisVendido = "Whey 300g";
+  const ultimasVendas = async () => {
+    try {
+      const token = Cookies.get("Bearer");
+      if (!token) {
+        Cookies.remove("Bearer");
+        console.error("Token ausente");
+
+        return navigate("/auth/login");
+      }
+      const response = await fetch(`${apiUrl}/Empresa/${id}/vendas/recentes`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
+        },
+      });
+      const textResponse = await response.text();
+      if (!response.ok) {
+        console.error("Erro na resposta da API", response.status);
+        return;
+      }
+
+      if (!textResponse) {
+        return null;  
+      }
+
+      const data = JSON.parse(textResponse);
+      console.log(data);
+      setUltimasVendasData(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const maisAvaliado = async () => {
+    try {
+      const token = Cookies.get("Bearer");
+      if (!token) {
+        Cookies.remove("Bearer");
+        console.error("Token ausente");
+
+        return navigate("/auth/login");
+      }
+
+      const response = await fetch(
+        `${apiUrl}/Empresa/Comentario/MaisAvaliados/${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        return null;
+      }
+      const responseText = await response.text();
+      if (!responseText) {
+        return null;
+      }
+      const data = JSON.parse(responseText);
+
+      return data.name;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  React.useEffect(() => {
+    const fetchMostReviewed = async () => {
+      const product = await maisAvaliado();
+      setMostReviewed(product);
+    };
+
+    const fetchVendas = async () => {
+      await ultimasVendas();
+    };
+    fetchVendas();
+    fetchMostReviewed();
+  }, [maisAvaliado]);
 
   return (
     <>
-      <div className="flex ">
+      <section className="flex ">
         <Card className="h-1200px border-none mt-2 ml-2 rounded-3xl p-4 bg-black">
           <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row bg-black">
             <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
@@ -191,6 +205,7 @@ function Dashboard() {
               className="aspect-auto h-[250px] w-full"
             >
               <BarChart
+                className=""
                 accessibilityLayer
                 data={chartData}
                 margin={{
@@ -200,6 +215,7 @@ function Dashboard() {
               >
                 <CartesianGrid vertical={false} />
                 <XAxis
+                  
                   dataKey="date"
                   tickLine={false}
                   axisLine={false}
@@ -213,7 +229,9 @@ function Dashboard() {
                     });
                   }}
                 />
+
                 <ChartTooltip
+                
                   animationDuration={200}
                   content={
                     <ChartTooltipContent
@@ -230,6 +248,7 @@ function Dashboard() {
                   }
                 />
                 <Bar
+                  
                   dataKey={activeChart}
                   fill={`var(--color-${activeChart})`}
                 />
@@ -237,23 +256,25 @@ function Dashboard() {
             </ChartContainer>
           </CardContent>
         </Card>
-        <div className="flex flex-wrap justify-center items-center  gap-6 m-3">
-          <div className="flex-1 min-w-[220px] justify-center bg-black h-60 p-10 items-center rounded-3xl">
-            <PiggyBank size={35} className="text-neutral-50 " />
-            <p className="text-neutral-500  text-xs">Seus ganhos foram:</p>
-            <p className="font-bold mt-2 text-3xl">R$ {valoreVendas}</p>
-            <a href="/Empresa/rendimento" className="">
-              <Button
-                variant="secondary"
-                className="p-5 mt-3 w-52 hover:bg-purple-800 duration-700  bg-purple-primary text-neutral-50 font-semibold"
-              >
-                Sacar
-              </Button>
-            </a>
+        <div className="flex flex-wrap justify-center items-center gap-4 m-5 max-w-full">
+          <div className="flex flex-col items-center  min-w-[320px] w-full  bg-black h-60 p-10  text-start rounded-3xl">
+            <div className="w-full">
+              <PiggyBank size={35} className="text-neutral-50 " />
+              <p className="text-neutral-500 text-xs">Seus ganhos foram:</p>
+              <p className="font-bold mt-2 text-3xl">R$ {wallet}</p>
+              <a href="/Empresa/rendimento" className="">
+                <Button
+                  variant="secondary"
+                  className="p-5 mt-3 w-52 hover:bg-purple-800 duration-700 bg-purple-primary text-neutral-50 font-semibold"
+                >
+                  Sacar
+                </Button>
+              </a>
+            </div>
           </div>
 
           {maisVendido && (
-            <div className="flex-1 min-w-[220px] justify-center bg-black h-60 p-10 items-center rounded-3xl">
+            <div className="flex-1 min-w-[220px]  justify-center bg-black h-60 p-10 items-center rounded-3xl">
               <ShoppingBasket size={35} className="text-neutral-50 " />
               <p className="text-neutral-500 mt-2 text-xs">
                 Produto mais vendido:
@@ -262,21 +283,21 @@ function Dashboard() {
             </div>
           )}
 
-          {maisAvaliado && (
-            <div className="flex-1 min-w-[220px] justify-center bg-black h-52 p-10 items-center rounded-3xl">
+          {mostReviewed && (
+            <div className="flex-1 min-w-[220px] h-60 justify-center bg-black  p-10 items-center rounded-3xl">
               <ShoppingBasket size={35} className="text-neutral-50 " />
               <p className="text-neutral-500 mt-2 text-xs">
                 Produto mais bem avaliado:
               </p>
-              <p className="font-bold mt-2 text-3xl">{maisAvaliado}</p>
+              <p className="font-bold mt-2 text-3xl">{mostReviewed}</p>
             </div>
           )}
         </div>
-      </div>
-      
-         <DataTable/>
-      
-          <FooterEmpresa/>
+      </section>
+
+      <DataTable  data={ultimasVendasData} />
+
+      <FooterEmpresa />
     </>
   );
 }

@@ -14,53 +14,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import Alert from "@mui/material/Alert";
-import { TokenResponse } from "@/interface/TokenResponse";
 import "../../Styles/Components/Alert.css";
-function Configuracao() {
+import { GetEmpresa } from "@/interface/GetEmpresa";
+
+function Configuracao({ apiUrl, id }: GetEmpresa) {
   const [senha, setSenha] = useState("");
   const [senhaNova, setSenhaNova] = useState("");
   const [repetirSenha, setRepetirSenha] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const navigate = useNavigate();
 
-  const apiUrl = import.meta.env.VITE_VITAVALORE_API_URL;
-  if (!apiUrl) {
-    console.error("API URL não configurada");
-    return;
+  const token = Cookies.get("Bearer");
+  if (!token) {
+    Cookies.remove("Bearer");
+    navigate("/auth/login");
   }
-
-  const getToken = async (): Promise<TokenResponse | undefined> => {
-    const token = Cookies.get("Bearer");
-    if (!token) {
-      Cookies.remove("Bearer");
-      console.error("Token ausente");
-      navigate("/auth/login");
-      return;
-    }
-
-    try {
-      const idTokenResponse = await fetch(
-        `${apiUrl}/Empresa/verification/${token}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!idTokenResponse.ok) {
-        throw new Error("Falha ao verificar o token");
-      }
-
-      const idTokenText = await idTokenResponse.text();
-      const { id } = JSON.parse(idTokenText);
-      return { id, token };
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const handleSenhaSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,13 +39,6 @@ function Configuracao() {
     }
 
     try {
-      const tokenData = await getToken();
-      if (!tokenData) {
-        console.error("Token não encontrado");
-        return;
-      }
-
-      const { id, token } = tokenData;
       const response = await fetch(
         `${apiUrl}/Empresa/Atualizar/Password/${id}`,
         {
@@ -95,7 +56,6 @@ function Configuracao() {
       }
 
       setAlertMessage("Senha Atualizada com sucesso.");
-
     } catch (error) {
       console.error(error);
       setAlertMessage("Erro ao atualizar a senha.");
@@ -109,13 +69,6 @@ function Configuracao() {
 
   const destructiveAction = async () => {
     try {
-      const tokenData = await getToken();
-      if (!tokenData) {
-        console.error("Token não encontrado");
-        return;
-      }
-
-      const { id, token } = tokenData;
       const response = await fetch(`${apiUrl}/Empresa/Deletar/${id}`, {
         method: "DELETE",
         headers: {
@@ -129,14 +82,12 @@ function Configuracao() {
         throw new Error(data.message);
       }
 
-
       Cookies.remove("Bearer");
       navigate("/auth/register");
     } catch (error) {
       console.error("Erro ao deletar:", error);
     }
   };
-
 
   return (
     <>

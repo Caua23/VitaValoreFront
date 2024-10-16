@@ -1,6 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
 import { ChartFature } from "./Statistics/ChartFature";
 import { Chartmultiple } from "./Statistics/ChartMultiple";
 import { UnansweredReviews } from "./Statistics/UnansweredReviews";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+import { Pergunta } from "@/interface/PerguntasProps";
+import { GetEmpresa } from "@/interface/GetEmpresa";
+import { ChartMoneyProps } from "@/interface/ChartMoney";
+
 const data = [
   { month: "Janeiro", Compras: 186, Avaliacoes: 80 },
   { month: "Fevereiro", Compras: 305, Avaliacoes: 200 },
@@ -13,61 +21,83 @@ const data = [
   { month: "Setembro", Compras: 280, Avaliacoes: 220 },
   { month: "Outubro", Compras: 310, Avaliacoes: 210 },
 ];
-const MoneyData = [
-  { month: "Janeiro", Money: 186.00 , },    
-  { month: "Fevereiro", Money: 305.50 , },  
-  { month: "Março", Money: 237.75 , },      
-  { month: "Abril", Money: 73.20 , },     
-  { month: "Maio", Money: 209.99 , },       
-  { month: "Junho", Money: 214.00 , },      
-  { month: "Julho", Money: 250.30 , },      
-  { month: "Agosto", Money: 300.40 , },     
-  { month: "Setembro", Money: 280.60 , },   
-  { month: "Outubro", Money: 310.80 , },    
-];
 
-  
-const Perguntas = [
-  {
-    "id": 1,
-    "titulo": "Qual é a capital da França?",
-    "pergunta": "A capital da França é Paris. Você gostaria de saber mais sobre essa cidade?"
-  },
-  {
-    "id": 2,
-    "titulo": "Como funciona a fotossíntese?",
-    "pergunta": "A fotossíntese é o processo pelo qual as plantas usam luz solar para produzir alimentos. Deseja uma explicação mais detalhada?"
-  },
-  {
-    "id": 3,
-    "titulo": "O que é a teoria da relatividade?",
-    "pergunta": "A teoria da relatividade foi proposta por Albert Einstein e inclui a relatividade restrita e geral. Gostaria de um resumo mais aprofundado?"
-  },
-  {
-    "id": 4,
-    "titulo": "Quais são os planetas do sistema solar aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  ?",
-    "pergunta": "Os planetas do sistema solar incluem Mercúrio, Vênus, Terra, Marte, Júpiter, Saturno, Urano e Netuno. Precisa de mais informações sobre algum deles?"
-  },
-  {
-    "id": 5,
-    "titulo": "O que é inteligência artificial?",
-    "pergunta": "Inteligência artificial é a simulação da inteligência humana em máquinas. Você gostaria de saber sobre suas aplicações?"
-  }
-]
+const MoneyData: ChartMoneyProps = {
+  data: [
+    { month: "Janeiro", Ganhos: 186.0 },
+    { month: "Fevereiro", Ganhos: 305.5 },
+    { month: "Março", Ganhos: 237.75 },
+    { month: "Abril", Ganhos: 73.2 },
+    { month: "Maio", Ganhos: 209.99 },
+    { month: "Junho", Ganhos: 214.0 },
+    { month: "Julho", Ganhos: 250.3 },
+    { month: "Agosto", Ganhos: 300.4 },
+    { month: "Setembro", Ganhos: 280.6 },
+    { month: "Outubro", Ganhos: 310.8 },
+  ],
+};
 
+function Statistics({ apiUrl }: GetEmpresa) {
+  const navigate = useNavigate();
+  const [perguntas, setPerguntas] = useState<Pergunta[]>([]);
+  const token = Cookies.get("Bearer");
 
-function Statistics() {
+  useEffect(() => {
+    const getPerguntas = async (token: string) => {
+      try {
+        const response = await fetch(
+          `${apiUrl}/Empresa/Comentario/NaoRespondida/`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          return data;
+        }
+
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (token) {
+      getPerguntas(token).then((data) => {
+        if (data) {
+          setPerguntas(data);
+        } else {
+          setPerguntas([
+            {
+              id: -1,
+              titulo: "Nenhuma pergunta",
+              pergunta: "",
+            },
+          ]);
+        }
+      });
+    } else {
+      Cookies.remove("Bearer");
+      console.error("Token ausente");
+      return navigate("/auth/login");
+    }
+  }, [apiUrl, navigate, token]);
+
   return (
     <>
-      <h1 className="text-3xl mt-10 font-bold text-white">
-        Estatísticas
-      </h1>
+      <h1 className="text-3xl mt-10 font-bold text-white">Estatísticas</h1>
       <div className="mt-10 mb-10 ml-5 flex flex-wrap justify-center items-center gap-7">
         <Chartmultiple data={data} />
-        <UnansweredReviews perguntas={Perguntas} />
+        <UnansweredReviews perguntas={perguntas} />
       </div>
-        <ChartFature data={MoneyData}/>   
+      <ChartFature data={MoneyData.data} />
     </>
   );
 }
+
 export default Statistics;

@@ -1,8 +1,7 @@
 import { MoreVertical } from "lucide-react";
-import { useContext, createContext, useState, useEffect } from "react";
+import { useContext, createContext, useState } from "react";
 import logo from "../../assets/Logo.png"; // Substitua pela sua imagem se necessário
-import { SidebarItemProps } from "../../interface/SidebarProps";
-import { SidebarProps } from "react-pro-sidebar";
+import { SidebarProps, SidebarItemProps } from "../../interface/SidebarProps"; // Importar corretamente as interfaces
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import {
@@ -37,18 +36,15 @@ import { Input } from "../ui/input";
 import Cnpj2 from "../cnpj2";
 import { Avatar } from "@mui/material";
 import { deepOrange } from "@mui/material/colors";
-const SidebarContext = createContext<{ expanded: boolean }>({
-  expanded: false,
-});
 
-export default function Sidebar({ children }: SidebarProps) {
+const SidebarContext = createContext<{ expanded: boolean }>({ expanded: false });
+
+export default function Sidebar({ children, id, nameEmpresa, emailEmpresa, apiUrl }: SidebarProps) {
   const [expanded, setExpanded] = useState(false);
   const [name, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [cnpj, setCnpj] = useState("");
   const [password, setPassword] = useState("");
-  const [nameEmpresa, setNameEmpresa] = useState("");
-  const [emailEmpresa, setEmailEmpresa] = useState("");
 
   const navigate = useNavigate();
   const logout = () => {
@@ -65,43 +61,15 @@ export default function Sidebar({ children }: SidebarProps) {
       cnpj,
       password,
     };
-
-    const apiUrl = import.meta.env.VITE_VITAVALORE_API_URL;
-    if (!apiUrl) {
-      console.error("API URL não configurada");
-      return;
-    }
-
     try {
       const token = Cookies.get("Bearer");
       if (!token) {
         Cookies.remove("Bearer");
         console.error("Token ausente");
-
         return navigate("/auth/login");
       }
-
-      // Fazer a requisição para obter o ID da empresa a partir do token
-      const idTokenResponse = await fetch(
-        `${apiUrl}/Empresa/verification/${token}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!idTokenResponse.ok) {
-        throw new Error("Falha ao verificar o token");
-      }
-
-      const idTokenText = await idTokenResponse.text();
-      const { id } = JSON.parse(idTokenText);
-
       const updateResponse = await fetch(`${apiUrl}/Empresa/Atualizar/${id}`, {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${token}`,
@@ -110,11 +78,12 @@ export default function Sidebar({ children }: SidebarProps) {
       });
 
       const updateResponseText = await updateResponse.text();
-      const updateData = JSON.parse(updateResponseText);
-
-      if (updateData.ok) {
-        console.log("Dados atualizados com sucesso!");
-        return "";
+      
+      if (updateResponse.ok) {
+        const updateData = JSON.parse(updateResponseText);
+        const { message, token } = updateData;
+        console.log(message);
+        Cookies.set("Bearer", token);
       } else {
         console.error("Erro ao atualizar os dados");
       }
@@ -123,48 +92,6 @@ export default function Sidebar({ children }: SidebarProps) {
     }
   };
 
-  const getEmpresa = async () => {
-    const apiUrl = import.meta.env.VITE_VITAVALORE_API_URL;
-    if (!apiUrl) {
-      console.error("API URL não configurada");
-      return;
-    }
-
-    try {
-      const token = Cookies.get("Bearer");
-      if (!token) {
-        Cookies.remove("Bearer");
-        console.error("Token ausente");
-        navigate("/auth/login");
-        return;
-      }
-      const idTokenResponse = await fetch(
-        `${apiUrl}/Empresa/verification/${token}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!idTokenResponse.ok) {
-        throw new Error("Falha ao verificar o token");
-      }
-
-      const idTokenText = await idTokenResponse.text();
-      const data = JSON.parse(idTokenText);
-      setNameEmpresa(data.name);
-      setEmailEmpresa(data.email);
-    } catch (error) {
-      console.error("Erro:", error);
-    }
-  };
-
-  useEffect(() => {
-    getEmpresa();
-  }, []);
   return (
     <aside
       className="h-screen fixed z-10 top-0 bottom-0"
@@ -180,14 +107,11 @@ export default function Sidebar({ children }: SidebarProps) {
               expanded ? "w-20" : "w-0"
             }`}
           />
-         
         </div>
 
         <SidebarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">{children}</ul>
         </SidebarContext.Provider>
-
-           
 
         <div className="border-t flex p-3 items-center">
           <Avatar
@@ -209,7 +133,7 @@ export default function Sidebar({ children }: SidebarProps) {
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="default" className=" border-none ">
+                <Button variant="default" className="border-none">
                   <MoreVertical size={20} />
                 </Button>
               </DropdownMenuTrigger>
@@ -221,7 +145,7 @@ export default function Sidebar({ children }: SidebarProps) {
                 <DropdownMenuGroup>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button className="w-full border-none p-2 bg-neutral-900 flex justify-normal hover:text-stone-800 hover:bg-white  shadow-none">
+                      <Button className="w-full border-none p-2 bg-neutral-900 flex justify-normal hover:text-stone-800 hover:bg-white shadow-none">
                         <div className="flex mr-12">
                           <User className="mr-2 h-4 w-4" />
                           <span className=""> Perfil</span>
@@ -303,18 +227,18 @@ export default function Sidebar({ children }: SidebarProps) {
                               defaultValue="********"
                               type="password"
                               placeholder="Confime Sua senha"
-                              className="col-span-3  text-neutral-50 "
+                              className="col-span-3 text-neutral-50"
                             />
                           </div>
                         </div>
                         <DialogFooter>
-                          <Button type="submit">Save</Button>
+                          <Button type="submit">Salvar</Button>
                         </DialogFooter>
                       </form>
                     </DialogContent>
                   </Dialog>
                   <DropdownMenuItem className="text-stone-50 cursor-pointer">
-                    <CreditCard className="mr-2 h-4 w-4" onClick={() => navigate("/Empresa/Planos")}/>
+                    <CreditCard className="mr-2 h-4 w-4" onClick={() => navigate("/Empresa/Planos")} />
                     <span>Planos</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
@@ -376,7 +300,7 @@ export function SidebarItem({
   return (
     <li
       onClick={handleClick}
-      className={` select-none relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${
+      className={`select-none relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${
         active
           ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-950"
           : "hover:bg-indigo-50 hover:text-neutral-900 text-gray-300"

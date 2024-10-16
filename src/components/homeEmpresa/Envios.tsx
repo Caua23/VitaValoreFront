@@ -1,7 +1,3 @@
-
-function Envios() {
-    return (
-        <div>Envios</div>
-    )
+export function Envios() {
+    
 }
-export default Envios;

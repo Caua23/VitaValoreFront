@@ -1,7 +1,7 @@
 export interface ChartMoneyProps {
     data: {
-        month: string;
-        Money: number;
-        
+      month: string;
+      Ganhos: number;
     }[];
-}       
+  }
+  
