@@ -47,7 +47,7 @@ function FormLogin() {
             }
         } catch (error) {
             console.error("Erro na requisição:", error);
-            setErrorMessage('Erro ao realizar o login. Tente novamente.'); // Mensagem de erro genérica
+            setErrorMessage('Erro ao realizar o login. Tente novamente.');
         }
     };
 
@@ -77,7 +77,7 @@ function FormLogin() {
                     />
                 </div>
 
-                <p>Não tem uma conta? <a href="/auth/register" className="register">Cadastre-se</a></p>
+                <p>Não tem uma conta? <a href="/auth/register" className="register underline text-white hover:text-purple-primary duration-500">Cadastre-se</a></p>
                 <p className="error">{errorMessage}</p>
                 <button type="submit" className="submit-button">Entrar</button>
             </form>

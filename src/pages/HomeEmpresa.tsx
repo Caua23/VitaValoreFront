@@ -15,7 +15,7 @@ import {
   Settings,
 } from "lucide-react";
 import Produtos from "@/components/homeEmpresa/produtos";
-import Envios from "../components/homeEmpresa/Envios";
+import { Envios } from "@/components/homeEmpresa/Envios";
 import Rendimentos from "@/components/homeEmpresa/Rendimentos";
 import Configuracao from "@/components/homeEmpresa/Settings";
 import Cookies from "js-cookie";
@@ -125,7 +125,7 @@ function HomeEmpresa() {
       "/empresa/Home": "/Empresa/dashboard",
       "/Empresa/Home": "/Empresa/dashboard",
       "/empresa/": "/Empresa/dashboard",
-      "/empresa" : "/Empresa/dashboard",
+      "/empresa": "/Empresa/dashboard",
       "/Empresa/": "/Empresa/dashboard",
       "/Empresa/Faqs": "/Empresa/faqs",
       "/Empresa/produtos": "/Empresa/Produtos",
@@ -262,7 +262,16 @@ function HomeEmpresa() {
               />
             }
           />
-          <Route path="envios" element={<Envios />} />
+          <Route path="envios"
+            element={
+              <Envios
+                id={id}
+                wallet={wallet}
+                nome={nameEmpresa}
+                email={emailEmpresa}
+                cnpj={cnpj}
+                apiUrl={apiUrlEnviar} />
+            } />
           <Route
             path="rendimento"
             element={
@@ -277,11 +286,11 @@ function HomeEmpresa() {
             }
           />
           <Route path="settings" element={<Configuracao id={id}
-                wallet={wallet}
-                nome={nameEmpresa}
-                email={emailEmpresa}
-                cnpj={cnpj}
-                apiUrl={apiUrlEnviar} />} />
+            wallet={wallet}
+            nome={nameEmpresa}
+            email={emailEmpresa}
+            cnpj={cnpj}
+            apiUrl={apiUrlEnviar} />} />
           <Route path="faqs" element={<Faq perguntas={Perguntas} />} />
         </Routes>
       </div>
