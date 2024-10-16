@@ -32,10 +32,10 @@ function FormRegister() {
                 body: JSON.stringify(RegisterData),
             });
 
-            const responseText = await response.text(); // Captura a resposta como texto
+            const responseText = await response.text(); 
 
             if (response.ok) {
-                const data = JSON.parse(responseText); // Tenta analisar como JSON
+                const data = JSON.parse(responseText); 
                 
                 const token = data.token;
                 Cookies.set('Bearer', token, { path: '/', sameSite: 'Lax', expires: 15 });
@@ -98,7 +98,7 @@ function FormRegister() {
                 </div>
 
                 <div>
-                    <p>Já possui conta? <a href="/auth/login" className="login">faça login</a></p>
+                    <p>Já possui conta? <a href="/auth/login" className="login text-white underline hover:text-purple-primary duration-500">faça login</a></p>
                     <p id='error' className='error'>{errorMessage}</p>
                     <button type="submit" className="submit-button">Registrar</button>
                 </div>

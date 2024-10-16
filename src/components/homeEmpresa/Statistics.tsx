@@ -46,7 +46,7 @@ function Statistics({ apiUrl }: GetEmpresa) {
     const getPerguntas = async (token: string) => {
       try {
         const response = await fetch(
-          `${apiUrl}/Empresa/Comentario/NaoRespondida/`,
+          `${apiUrl}/Empresa/Comentario/NaoRespondida`,
           {
             method: "GET",
             headers: {
@@ -55,13 +55,15 @@ function Statistics({ apiUrl }: GetEmpresa) {
             },
           }
         );
-
-        if (response.ok) {
-          const data = await response.json();
+        if (!response.ok) {
+          return null;
+        }
+        const textResponse = await response.text();
+        
+        if(textResponse){
+          const data = JSON.parse(textResponse);
           return data;
         }
-
-        console.log(response);
       } catch (error) {
         console.error(error);
       }
