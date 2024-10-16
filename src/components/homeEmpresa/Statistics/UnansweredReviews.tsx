@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { PerguntasProps } from "@/interface/PerguntasProps";
 
+
 export function UnansweredReviews({ perguntas }: PerguntasProps) {
   const navigate = useNavigate();
 
@@ -18,10 +19,12 @@ export function UnansweredReviews({ perguntas }: PerguntasProps) {
         <h4 className="mb-4 text-sm font-normal leading-none text-neutral-50">
           Perguntas Sem Resposta
         </h4>
-        <Accordion type="single"  collapsible>
+        <Accordion type="single" collapsible>
           {perguntas.map((pergunta) => (
             <AccordionItem value={`item-${pergunta.id}`} key={pergunta.id}>
-              <AccordionTrigger className="text-start ">{pergunta.titulo}</AccordionTrigger>
+              <AccordionTrigger className="text-start ">
+                {pergunta.titulo}
+              </AccordionTrigger>
               <AccordionContent>
                 <p className="text-white">{pergunta.pergunta}</p>
                 <Button

@@ -37,7 +37,7 @@ function FormLogin() {
                 const token = data.token;
 
                 if (token) {
-                    Cookies.set('Bearer', token, { path: '/', sameSite: 'Lax', expires: 15 });
+                    await Cookies.set('Bearer', token, { path: '/', sameSite: 'Lax', expires: 15 });
                     navigate('/Empresa/Home');
                 }
             } else {

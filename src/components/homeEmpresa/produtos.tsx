@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useCallback, useEffect, useState } from "react";
@@ -15,17 +16,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
-import { ProdutosProps } from "@/interface/ProdutosProps";
+import { Product } from "@/interface/ProdutosProps";
+import { GetEmpresa } from "@/interface/GetEmpresa";
 
-function Produtos() {
+function Produtos({apiUrl, email , id }:GetEmpresa) {
   const navigate = useNavigate();
-  const [produtos, setProdutos] = useState<ProdutosProps[]>([]);
+  const [produtos, setProdutos] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [novoProduto, setNovoProduto] = useState({
-    email: "",
+    email: email,
     name: "",
     preco: "",
     imagem: "",
@@ -33,7 +35,7 @@ function Produtos() {
     marca: "",
   });
   const [descricaoLength, setDescricaoLength] = useState(0);
-  const apiUrl = import.meta.env.VITE_VITAVALORE_API_URL;
+
 
   if (!apiUrl) {
     console.error("API URL não configurada");
@@ -41,45 +43,10 @@ function Produtos() {
     return;
   }
 
-  const getEmpresa = async () => {
-    try {
-      const token = Cookies.get("Bearer");
-      if (!token) {
-        Cookies.remove("Bearer");
-        console.error("Token ausente");
-        navigate("/auth/login");
-        return;
-      }
-
-      const idTokenResponse = await fetch(
-        `${apiUrl}/Empresa/verification/${token}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!idTokenResponse.ok) {
-        throw new Error("Falha ao verificar o token");
-      }
-      const data = await idTokenResponse.json();
-      setNovoProduto((prev) => ({
-        ...prev,
-        email: data.email,
-      }));
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+ 
   const getProdutos = useCallback(async () => {
     try {
-      const empresaData = await getEmpresa();
+      
       const token = Cookies.get("Bearer");
       if (!token) {
         Cookies.remove("Bearer");
@@ -89,7 +56,7 @@ function Produtos() {
       }
 
       const response = await fetch(
-        `${apiUrl}/Produtos/api/getAllProducts/Empresa/${empresaData.id}`,
+        `${apiUrl}/Produtos/api/getAllProducts/Empresa/${id}`,
         {
           method: "GET",
           headers: {
@@ -111,9 +78,8 @@ function Produtos() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [apiUrl, id, navigate]);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     getProdutos();
   }, [getProdutos]);
@@ -152,7 +118,6 @@ function Produtos() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    // Converter o preço para um número
     const updatedValue = name === "preco" ? parseFloat(value) : value;
 
     setNovoProduto((prev) => ({
@@ -305,7 +270,7 @@ function Produtos() {
         </p>
 
         {produtos && produtos.length > 0 ? (
-          <ProdutosComponent data={produtos} />
+          <ProdutosComponent data={produtos} /> 
         ) : (
           <p className="text-center text-white font-bold text-2xl">
             Nenhum Produto encontrado

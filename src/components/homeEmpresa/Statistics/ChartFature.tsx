@@ -19,8 +19,8 @@ import { ChartMoneyProps } from "@/interface/ChartMoney";
 export const description = "A line chart with dots";
 
 const chartConfig = {
-  Money: {
-    label: "Money",
+  Ganhos: {
+    label: "Ganhos",
     color: "#28a745",
   },
   mobile: {
@@ -39,6 +39,8 @@ const formatCurrency = (value: number | bigint) => {
     currency: "BRL",
   }).format(value);
 };
+
+
 
 export function ChartFature({ data }: ChartMoneyProps) {
   return (
@@ -59,7 +61,7 @@ export function ChartFature({ data }: ChartMoneyProps) {
           <ChartContainer config={chartConfig}>
             <LineChart
               accessibilityLayer
-              data={data}
+              data={data} 
               margin={{
                 top: 30,
                 left: 1,
@@ -85,14 +87,14 @@ export function ChartFature({ data }: ChartMoneyProps) {
                 }
               />
               <Line
-                dataKey="Money"
+                dataKey="Ganhos"
                 type="natural"
-                stroke="var(--color-Money)"
+                stroke="var(--color-Ganhos)"
                 strokeWidth={2}
                 dot={{
                   fill: "#28a745",
                 }}
-                activeDot={{
+                activeDot={{    
                   r: 6,
                 }}
               >
