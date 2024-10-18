@@ -8,19 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Pergunta } from "@/interface/PerguntasProps";
 import { GetEmpresa } from "@/interface/GetEmpresa";
 import { ChartMoneyProps } from "@/interface/ChartMoney";
-
-const data = [
-  { month: "Janeiro", Compras: 186, Avaliacoes: 80 },
-  { month: "Fevereiro", Compras: 305, Avaliacoes: 200 },
-  { month: "Março", Compras: 237, Avaliacoes: 120 },
-  { month: "Abril", Compras: 73, Avaliacoes: 190 },
-  { month: "Maio", Compras: 209, Avaliacoes: 130 },
-  { month: "Junho", Compras: 214, Avaliacoes: 140 },
-  { month: "Julho", Compras: 250, Avaliacoes: 160 },
-  { month: "Agosto", Compras: 300, Avaliacoes: 180 },
-  { month: "Setembro", Compras: 280, Avaliacoes: 220 },
-  { month: "Outubro", Compras: 310, Avaliacoes: 210 },
-];
+import { ChartMultipleProps } from "@/interface/ChartMultiple";
 
 const MoneyData: ChartMoneyProps = {
   data: [
@@ -37,10 +25,27 @@ const MoneyData: ChartMoneyProps = {
   ],
 };
 
-function Statistics({ apiUrl }: GetEmpresa) {
+function Statistics({ apiUrl, id }: GetEmpresa) {
   const navigate = useNavigate();
   const [perguntas, setPerguntas] = useState<Pergunta[]>([]);
+  const [chartData, setChartData] = useState<ChartMultipleProps>({ data: [] });
+
   const token = Cookies.get("Bearer");
+
+  const meses: Record<number, string> = {
+    1: "Janeiro",
+    2: "Fevereiro",
+    3: "Março",
+    4: "Abril",
+    5: "Maio",
+    6: "Junho",
+    7: "Julho",
+    8: "Agosto",
+    9: "Setembro",
+    10: "Outubro",
+    11: "Novembro",
+    12: "Dezembro",
+  };
 
   useEffect(() => {
     const getPerguntas = async (token: string) => {
@@ -59,8 +64,7 @@ function Statistics({ apiUrl }: GetEmpresa) {
           return null;
         }
         const textResponse = await response.text();
-        
-        if(textResponse){
+        if (textResponse) {
           const data = JSON.parse(textResponse);
           return data;
         }
@@ -74,13 +78,7 @@ function Statistics({ apiUrl }: GetEmpresa) {
         if (data) {
           setPerguntas(data);
         } else {
-          setPerguntas([
-            {
-              id: -1,
-              titulo: "Nenhuma pergunta",
-              pergunta: "",
-            },
-          ]);
+          setPerguntas([{ id: -1, titulo: "Nenhuma pergunta", pergunta: "" }]);
         }
       });
     } else {
@@ -90,11 +88,67 @@ function Statistics({ apiUrl }: GetEmpresa) {
     }
   }, [apiUrl, navigate, token]);
 
+  const trimestral = async () => {
+    try {
+      const token = Cookies.get("Bearer");
+      if (!token) {
+        Cookies.remove("Bearer");
+        console.error("Token ausente");
+        return navigate("/auth/login");
+      }
+
+      const response = await fetch(
+        `${apiUrl}/Empresa/${id}/vendas/trimestral`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        return null;
+      }
+      const responseText = await response.text();
+      if (!responseText) {
+        return null;
+      }
+      const data = JSON.parse(responseText);
+      return data;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    const fetchTrimestral = async () => {
+      const data = await trimestral();
+      const mappedData = MappingData(data);
+      setChartData({ data: mappedData });
+    };
+
+    fetchTrimestral();
+  }, []);
+
+  function MappingData(data: { Avaliacao: number; Compras: number; date: string }[]) {
+    return data.map((item) => {
+      const mesNumero = parseInt(item.date.substring(5, 7), 10); // Extrai o mês como número
+
+      return {
+        month: meses[mesNumero], 
+        Compras: item.Compras,
+        Avaliacao: item.Avaliacao,
+      };
+    });
+  }
+
   return (
     <>
-      <h1 className="text-3xl mt-10 font-bold text-white">Estatísticas</h1>
+      <h1 className="text-3xl mt-10 font-bold text-white">Estatísticas</h1>
       <div className="mt-10 mb-10 ml-5 flex flex-wrap justify-center items-center gap-7">
-        <Chartmultiple data={data} />
+        <Chartmultiple data={chartData.data.length > 1 ? chartData.data : []} />
         <UnansweredReviews perguntas={perguntas} />
       </div>
       <ChartFature data={MoneyData.data} />

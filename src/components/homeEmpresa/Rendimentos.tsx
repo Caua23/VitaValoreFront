@@ -18,29 +18,21 @@ import { Input } from "../ui/input";
 import { Alert } from "@mui/material";
 import { GetEmpresa } from "@/interface/GetEmpresa";
 
-function Rendimentos({id, apiUrl, cnpj, wallet }: GetEmpresa) {
+function Rendimentos({ id, apiUrl, cnpj, wallet }: GetEmpresa) {
   const navigate = useNavigate();
 
   const [valorSaque, setValorSaque] = useState<number>(0);
-  
+
   const [alertMessage, setAlertMessage] = useState<string>("");
 
   const logout = () => {
     Cookies.remove("Bearer");
     navigate("/auth/login");
   };
-
-  
-
   if (!apiUrl) {
     console.error("API URL não configurada");
     return;
   }
-
-
-
-
-  
 
   const saque = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,9 +57,8 @@ function Rendimentos({id, apiUrl, cnpj, wallet }: GetEmpresa) {
         return;
       }
 
-      
       const response = await fetch(`${apiUrl}/Empresa/Saque/${id}`, {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${token}`,
@@ -75,12 +66,13 @@ function Rendimentos({id, apiUrl, cnpj, wallet }: GetEmpresa) {
         body: JSON.stringify(sendData),
       });
 
-      const dataResponse = await response.json();
+      const dataResponse = await response.text();
       if (!response.ok) {
-        throw new Error(dataResponse.message);
+        throw new Error(dataResponse);
       }
 
-      setAlertMessage(dataResponse.message);
+      // setAlertMessage(dataResponse);
+      window.location.reload();
     } catch (error) {
       console.error(error);
       setAlertMessage("Ocorreu um erro ao processar seu saque.");
@@ -95,7 +87,6 @@ function Rendimentos({id, apiUrl, cnpj, wallet }: GetEmpresa) {
     { month: "Maio", Ganhos: 209 },
     { month: "Junho", Ganhos: 214 },
   ];
- 
   useEffect(() => {
     if (alertMessage) {
       const timer = setTimeout(() => {
@@ -124,8 +115,7 @@ function Rendimentos({id, apiUrl, cnpj, wallet }: GetEmpresa) {
             <BadgeDollarSign size={25} className="text-white" />
           </div>
           <p className="text-white font-normal text-5xl">
-            {" "}
-            R$ <strong>{wallet}</strong>{" "}
+            R$ <strong>{wallet.toFixed(2)}</strong> 
           </p>
         </div>
 

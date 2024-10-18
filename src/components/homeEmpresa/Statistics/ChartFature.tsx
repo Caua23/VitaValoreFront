@@ -110,9 +110,11 @@ export function ChartFature({ data }: ChartMoneyProps) {
           </ChartContainer>
         </CardContent>
         <CardFooter className="flex-col items-start gap-2 text-sm">
-          <div className="leading-none text-muted-foreground">
-            Mostra total de ganhos anualmente
+          <div className="text-white leading-none text-muted-foreground">
+            Mostra total de ganhos anualmente      
+            <p className="text-neutral-500 font-light text-sm">(Meramente Ilustrativo)</p>   
           </div>
+
         </CardFooter>
       </Card>
     </div>

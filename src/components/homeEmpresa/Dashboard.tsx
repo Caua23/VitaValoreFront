@@ -1,4 +1,3 @@
-
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
@@ -7,6 +6,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -24,37 +24,9 @@ import FooterEmpresa from "./footerEmpresa";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { GetEmpresa } from "@/interface/GetEmpresa";
+import { VendasProps } from "@/interface/VendasProps";
+import { ChartDataDashbord } from "@/interface/ChartDataDashbord";
 
-const chartData = [
-  { date: "2024-04-01", Compras: 222, Avaliacao: 150 },
-  { date: "2024-04-02", Compras: 97, Avaliacao: 80 },
-  { date: "2024-04-03", Compras: 167, Avaliacao: 120 },
-  { date: "2024-04-04", Compras: 242, Avaliacao: 260 },
-  { date: "2024-04-05", Compras: 373, Avaliacao: 290 },
-  { date: "2024-04-06", Compras: 301, Avaliacao: 40 },
-  { date: "2024-04-07", Compras: 245, Avaliacao: 180 },
-  { date: "2024-04-08", Compras: 409, Avaliacao: 50 },
-  { date: "2024-06-11", Compras: 92, Avaliacao: 150 },
-  { date: "2024-06-12", Compras: 492, Avaliacao: 53 },
-  { date: "2024-06-13", Compras: 81, Avaliacao: 130 },
-  { date: "2024-06-14", Compras: 426, Avaliacao: 80 },
-  { date: "2024-06-15", Compras: 307, Avaliacao: 150 },
-  { date: "2024-06-16", Compras: 371, Avaliacao: 210 },
-  { date: "2024-06-17", Compras: 475, Avaliacao: 120 },
-  { date: "2024-06-18", Compras: 107, Avaliacao: 170 },
-  { date: "2024-06-19", Compras: 341, Avaliacao: 290 },
-  { date: "2024-06-20", Compras: 408, Avaliacao: 50 },
-  { date: "2024-06-21", Compras: 169, Avaliacao: 210 },
-  { date: "2024-06-22", Compras: 317, Avaliacao: 270 },
-  { date: "2024-06-23", Compras: 480, Avaliacao: 30 },
-  { date: "2024-06-24", Compras: 132, Avaliacao: 180 },
-  { date: "2024-06-25", Compras: 141, Avaliacao: 190 },
-  { date: "2024-06-26", Compras: 434, Avaliacao: 380 },
-  { date: "2024-06-27", Compras: 448, Avaliacao: 92 },
-  { date: "2024-06-28", Compras: 149, Avaliacao: 200 },
-  { date: "2024-06-29", Compras: 103, Avaliacao: 160 },
-  { date: "2024-06-30", Compras: 446, Avaliacao: 100 },
-];
 const chartConfig = {
   views: {
     label: "Compras",
@@ -70,12 +42,15 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
-  const [ultimasVendasData, setUltimasVendasData] = React.useState([]);
-
+  const [ultimasVendasData, setUltimasVendasData] = React.useState<
+    VendasProps[]
+  >([]);
+  const [chartData, setChartData] = React.useState<ChartDataDashbord[]>([]);
   const navigate = useNavigate();
   const [activeChart, setActiveChart] =
     React.useState<keyof typeof chartConfig>("Compras");
   const [mostReviewed, setMostReviewed] = React.useState<string | null>(null);
+  const [moreSold, setMoreSold] = React.useState<string | null>(null);
   const total = React.useMemo(
     () => ({
       Compras: chartData.reduce((acc, curr) => acc + curr.Compras, 0),
@@ -83,7 +58,40 @@ function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
     }),
     []
   );
-  const maisVendido = "Whey 300g";
+  const maisVendido = async () => {
+    try {
+      const token = Cookies.get("Bearer");
+      if (!token) {
+        Cookies.remove("Bearer");
+        console.error("Token ausente");
+        return navigate("/auth/login");
+      }
+
+      const response = await fetch(`${apiUrl}/Empresa/${id}/vendas/topVendas`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        console.error("Erro na resposta da API", response.status);
+        return;
+      }
+
+      const textResponse = await response.text();
+      if (!textResponse) {
+        return setMostReviewed(null);
+      }
+
+      const data = JSON.parse(textResponse);
+      return data;
+    } catch (error) {
+      console.error("Erro ao buscar mais vendido:", error);
+    }
+  };
+
   const ultimasVendas = async () => {
     try {
       const token = Cookies.get("Bearer");
@@ -107,12 +115,11 @@ function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
       }
 
       if (!textResponse) {
-        return null;  
+        return setMoreSold;
       }
 
       const data = JSON.parse(textResponse);
-      console.log(data);
-      setUltimasVendasData(data);
+      return data;
     } catch (e) {
       console.error(e);
     }
@@ -148,7 +155,42 @@ function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
       }
       const data = JSON.parse(responseText);
 
-      return data.name;
+      return data;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const trimestral = async () => {
+    try {
+      const token = Cookies.get("Bearer");
+      if (!token) {
+        Cookies.remove("Bearer");
+        console.error("Token ausente");
+
+        return navigate("/auth/login");
+      }
+
+      const response = await fetch(
+        `${apiUrl}/Empresa/${id}/vendas/trimestral`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        return null;
+      }
+      const responseText = await response.text();
+      if (!responseText) {
+        return null;
+      }
+      const data = JSON.parse(responseText);
+
+      return data;
     } catch (e) {
       console.error(e);
     }
@@ -157,19 +199,59 @@ function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
   React.useEffect(() => {
     const fetchMostReviewed = async () => {
       const product = await maisAvaliado();
-      setMostReviewed(product);
+      return product.length > 0 ? setMostReviewed(product[0].name) : null;
     };
 
     const fetchVendas = async () => {
-      await ultimasVendas();
+      const data = await ultimasVendas();
+      const ultimasVendasJson = MappingData(data);
+      return setUltimasVendasData(ultimasVendasJson);
     };
+    const fetchMostSold = async () => {
+      const product = await maisVendido();
+      return product.length > 0 ? setMoreSold(product[0][0].name) : null;
+    };
+
+    const fetchTrimestral = async () => {
+      const data = await trimestral();
+      return setChartData(data);
+    };
+    fetchTrimestral();
+    fetchMostSold();
     fetchVendas();
     fetchMostReviewed();
-  }, [maisAvaliado]);
+  }, []);
+
+  function MappingData(
+    data: {
+      id: string;
+      produtos: {
+        name: string;
+        preco: number;
+      };
+      statusPagamento:
+          | "PENDENTE"
+          | "REJEITADO"
+          | "PROCESSANDO"
+          | "APROVADO"
+          | "CANCELADO";
+
+    }[]
+  ) {
+    return data.map((item) => {
+      const venda = {
+        id: item.id.toString(),
+        produto: item.produtos.name,
+        pago: item.produtos.preco,
+        status: item.statusPagamento,
+      };
+      return venda;
+    });
+  }
 
   return (
     <>
-      <section className="flex ">
+      <section className="grid  grid-cols-2">
         <Card className="h-1200px border-none mt-2 ml-2 rounded-3xl p-4 bg-black">
           <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row bg-black">
             <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
@@ -179,6 +261,7 @@ function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
               </CardDescription>
             </div>
             <div className="flex">
+
               {["Compras", "Avaliacao"].map((key) => {
                 const chart = key as keyof typeof chartConfig;
                 return (
@@ -215,7 +298,6 @@ function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
               >
                 <CartesianGrid vertical={false} />
                 <XAxis
-                  
                   dataKey="date"
                   tickLine={false}
                   axisLine={false}
@@ -231,7 +313,6 @@ function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
                 />
 
                 <ChartTooltip
-                
                   animationDuration={200}
                   content={
                     <ChartTooltipContent
@@ -248,20 +329,21 @@ function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
                   }
                 />
                 <Bar
-                  
                   dataKey={activeChart}
                   fill={`var(--color-${activeChart})`}
                 />
               </BarChart>
             </ChartContainer>
           </CardContent>
+          <CardFooter className=" mt-10  ">
+          </CardFooter>
         </Card>
         <div className="flex flex-wrap justify-center items-center gap-4 m-5 max-w-full">
           <div className="flex flex-col items-center  min-w-[320px] w-full  bg-black h-60 p-10  text-start rounded-3xl">
             <div className="w-full">
               <PiggyBank size={35} className="text-neutral-50 " />
               <p className="text-neutral-500 text-xs">Seus ganhos foram:</p>
-              <p className="font-bold mt-2 text-3xl">R$ {wallet}</p>
+              <p className="font-bold mt-2 text-3xl">R$ {wallet.toFixed(2)}</p>
               <a href="/Empresa/rendimento" className="">
                 <Button
                   variant="secondary"
@@ -273,29 +355,33 @@ function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
             </div>
           </div>
 
-          {maisVendido && (
-            <div className="flex-1 min-w-[220px]  justify-center bg-black h-60 p-10 items-center rounded-3xl">
+          {moreSold && (
+            <div className="flex-1 min-w-[220px] justify-center bg-black h-64 p-10 items-center rounded-3xl">
               <ShoppingBasket size={35} className="text-neutral-50 " />
               <p className="text-neutral-500 mt-2 text-xs">
                 Produto mais vendido:
               </p>
-              <p className="font-bold mt-2 text-3xl">{maisVendido}</p>
+              <p className="font-semibold mt-2 text-xl text-wrap w-[200px]">
+                {moreSold}
+              </p>
             </div>
           )}
 
           {mostReviewed && (
-            <div className="flex-1 min-w-[220px] h-60 justify-center bg-black  p-10 items-center rounded-3xl">
+            <div className="flex-1 min-w-[220px] h-64 justify-center bg-black  p-10 items-center rounded-3xl">
               <ShoppingBasket size={35} className="text-neutral-50 " />
               <p className="text-neutral-500 mt-2 text-xs">
                 Produto mais bem avaliado:
               </p>
-              <p className="font-bold mt-2 text-3xl">{mostReviewed}</p>
+              <p className="font-semibold mt-2 text-xl text-wrap w-[200px]">
+                {mostReviewed}
+              </p>
             </div>
           )}
         </div>
       </section>
 
-      <DataTable  data={ultimasVendasData} />
+      <DataTable data={ultimasVendasData} />
 
       <FooterEmpresa />
     </>

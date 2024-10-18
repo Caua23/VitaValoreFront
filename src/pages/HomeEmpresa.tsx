@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
+
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Sidebar, { SidebarItem } from "../components/homeEmpresa/AsideEmpresa";
@@ -9,13 +9,12 @@ import {
   LifeBuoy,
   Receipt,
   Boxes,
-  Package,
+  // Package,
   BarChart3,
   LayoutDashboard,
   Settings,
 } from "lucide-react";
 import Produtos from "@/components/homeEmpresa/produtos";
-import { Envios } from "@/components/homeEmpresa/Envios";
 import Rendimentos from "@/components/homeEmpresa/Rendimentos";
 import Configuracao from "@/components/homeEmpresa/Settings";
 import Cookies from "js-cookie";
@@ -92,6 +91,7 @@ function HomeEmpresa() {
       });
 
       if (!response.ok) {
+        logout();
         throw new Error("Falha ao verificar o token");
       }
 
@@ -167,7 +167,7 @@ function HomeEmpresa() {
       </div>
     );
   }
-
+  
   return (
     <div className="flex">
       <Sidebar
@@ -194,13 +194,13 @@ function HomeEmpresa() {
           path="/Empresa/statistics"
           active={location.pathname === "/Empresa/statistics"}
         />
-        <SidebarItem
+        {/* <SidebarItem
           icon={<Package size={20} />}
           text="Envios"
           alert
           path="/Empresa/envios"
           active={location.pathname === "/Empresa/envios"}
-        />
+        /> */}
         <SidebarItem
           icon={<Receipt size={20} />}
           text="Rendimento"
@@ -262,7 +262,7 @@ function HomeEmpresa() {
               />
             }
           />
-          <Route path="envios"
+          {/* <Route path="envios"
             element={
               <Envios
                 id={id}
@@ -271,7 +271,7 @@ function HomeEmpresa() {
                 email={emailEmpresa}
                 cnpj={cnpj}
                 apiUrl={apiUrlEnviar} />
-            } />
+            } /> */}
           <Route
             path="rendimento"
             element={
@@ -282,6 +282,7 @@ function HomeEmpresa() {
                 email={emailEmpresa}
                 cnpj={cnpj}
                 apiUrl={apiUrlEnviar}
+                
               />
             }
           />

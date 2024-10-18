@@ -1,28 +1,19 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useCallback, useEffect, useState } from "react";
 import ProdutosComponent from "../ProdutosComponent";
-
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { Product } from "@/interface/ProdutosProps";
 import { GetEmpresa } from "@/interface/GetEmpresa";
 
-function Produtos({apiUrl, email , id }:GetEmpresa) {
+function Produtos({ apiUrl, email, id }: GetEmpresa) {
   const navigate = useNavigate();
   const [produtos, setProdutos] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,25 +27,19 @@ function Produtos({apiUrl, email , id }:GetEmpresa) {
   });
   const [descricaoLength, setDescricaoLength] = useState(0);
 
-
-  if (!apiUrl) {
-    console.error("API URL não configurada");
-    setLoading(false);
-    return;
+  const token = Cookies.get("Bearer");
+  if (!token) {
+    Cookies.remove("Bearer");
+    console.error("Token ausente");
+    navigate("/auth/login");
+    return null;
   }
 
- 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const getProdutos = useCallback(async () => {
+    
     try {
       
-      const token = Cookies.get("Bearer");
-      if (!token) {
-        Cookies.remove("Bearer");
-        console.error("Token ausente");
-        navigate("/auth/login");
-        return;
-      }
-
       const response = await fetch(
         `${apiUrl}/Produtos/api/getAllProducts/Empresa/${id}`,
         {
@@ -66,40 +51,28 @@ function Produtos({apiUrl, email , id }:GetEmpresa) {
         }
       );
 
+      const textResponse = await response.text();
       if (!response.ok) {
-        const errorText = await response.text();
-        setError(errorText);
+        setError(`Erro na resposta da API: ${response.status}`);
+        return;
       }
 
-      const data = await response.json();
-      setProdutos(data);
+      if (textResponse) {
+        const data = JSON.parse(textResponse);
+        setProdutos(data);
+      }
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [apiUrl, id, navigate]);
+      setError("Erro ao buscar produtos");
+    } 
+  }, [apiUrl, id, token]);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     getProdutos();
   }, [getProdutos]);
 
-  if (loading) {
-    return (
-      <p className="text-center text-white font-bold text-2xl">Carregando...</p>
-    );
-  }
-
-  if (error) {
-    return (
-      <p className="text-center text-red-700 font-bold text-2xl">{error}</p>
-    );
-  }
-
-  const handleAddProductClick = () => {
-    setIsModalOpen(true);
-  };
-
+  const handleAddProductClick = () => setIsModalOpen(true);
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setNovoProduto({
@@ -110,26 +83,20 @@ function Produtos({apiUrl, email , id }:GetEmpresa) {
       marca: "",
       email: "",
     });
+    setDescricaoLength(0);
     setSuccessMessage("");
     setError("");
-    setDescricaoLength(0);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     const updatedValue = name === "preco" ? parseFloat(value) : value;
-
-    setNovoProduto((prev) => ({
-      ...prev,
-      [name]: updatedValue,
-    }));
+    setNovoProduto((prev) => ({ ...prev, [name]: updatedValue }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const token = Cookies.get("Bearer");
       const response = await fetch(`${apiUrl}/Produtos/Cadastrar`, {
         method: "POST",
         headers: {
@@ -154,12 +121,8 @@ function Produtos({apiUrl, email , id }:GetEmpresa) {
 
   const handleChangeDescricao = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-
     if (value.length <= 600) {
-      setNovoProduto((prev) => ({
-        ...prev,
-        descricao: value,
-      }));
+      setNovoProduto((prev) => ({ ...prev, descricao: value }));
       setDescricaoLength(value.length);
     }
   };

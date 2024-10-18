@@ -1,4 +1,4 @@
-import {  CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
 import {
   Card,
@@ -23,7 +23,7 @@ const chartConfig = {
     label: "Compras",
     color: "#8400ff",
   },
-  Avaliacoes: {
+  Avaliacao: {
     label: "Avaliações",
     color: "#ffff00",
   },
@@ -82,9 +82,9 @@ export function Chartmultiple({ data }: ChartMultipleProps) {
               dot={false}
             />
             <Line
-              dataKey="Avaliacoes"
+              dataKey="Avaliacao"
               type="monotone"
-              stroke="var(--color-Avaliacoes)"
+              stroke="var(--color-Avaliacao)"
               strokeWidth={2}
               dot={false}
             />
@@ -94,8 +94,11 @@ export function Chartmultiple({ data }: ChartMultipleProps) {
       <CardFooter>
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
-            <div className="flex items-center gap-2 leading-none text-muted-foreground text-wrap max-w-44">
-              Mostra suas vendas e avaliações do Ano.
+            <span className="text-neutral-500 text-wrap max-w-60 text-xs ">
+              voce precisa de pelo menos 2 dias na plataforma ou mais para paracer
+            </span>
+            <div className="text-white flex items-center gap-2 leading-none text-muted-foreground text-wrap max-w-60">
+              Mostra suas vendas e avaliações Trimestrais.
             </div>
           </div>
         </div>
