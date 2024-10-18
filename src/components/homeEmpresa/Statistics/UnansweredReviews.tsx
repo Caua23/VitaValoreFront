@@ -25,8 +25,8 @@ export function UnansweredReviews({ perguntas }: PerguntasProps) {
               <AccordionTrigger className="text-start ">
                 {pergunta.titulo}
               </AccordionTrigger>
-              <AccordionContent>
-                <p className="text-white">{pergunta.pergunta}</p>
+              <AccordionContent>  
+                <p className= " text-center text-white max-w-[344px] text-wrap">{pergunta.descricao}</p>
                 <Button
                   variant={"link"}
                   className="mt-2 text-white font-semibold hover:text-purple-primary duration-500"

@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -86,6 +87,9 @@ export function ChartFature2({data}: ChartMoneyProps) {
             </Bar>
           </BarChart>
         </ChartContainer>
+        <CardFooter>
+        <p className="text-neutral-300 font-light text-sm">(Meramente Ilustrativo)</p>   
+        </CardFooter>
       </CardContent>
     </Card>
   );

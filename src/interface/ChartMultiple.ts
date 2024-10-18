@@ -1,7 +1,8 @@
 export interface ChartMultipleProps {
     data: {
-        month: string;
-        Compras: number;
-        Avaliacoes: number;
+      month: string;
+      Compras: number;
+      Avaliacao: number;
     }[];
-}
+  }
+  

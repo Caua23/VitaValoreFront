@@ -2,7 +2,7 @@
 export interface Pergunta {
     id: number;
     titulo: string;
-    pergunta: string;
+    descricao: string;
   }
   
   export interface PerguntasProps {
