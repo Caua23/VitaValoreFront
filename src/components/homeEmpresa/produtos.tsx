@@ -13,7 +13,7 @@ import { GetEmpresa } from "@/interface/GetEmpresa";
 function Produtos({ apiUrl, email, id }: GetEmpresa) {
   const navigate = useNavigate();
   const [produtos, setProdutos] = useState<Product[]>([]);
-  
+
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,9 +37,9 @@ function Produtos({ apiUrl, email, id }: GetEmpresa) {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const getProdutos = useCallback(async () => {
-    
+
     try {
-      
+
       const response = await fetch(
         `${apiUrl}/Produtos/api/getAllProducts/Empresa/${id}`,
         {
@@ -64,7 +64,7 @@ function Produtos({ apiUrl, email, id }: GetEmpresa) {
     } catch (error) {
       console.error(error);
       setError("Erro ao buscar produtos");
-    } 
+    }
   }, [apiUrl, id, token]);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -107,7 +107,8 @@ function Produtos({ apiUrl, email, id }: GetEmpresa) {
       });
 
       if (!response.ok) {
-        throw new Error("Falha ao adicionar o produto");
+        const errorData = await response.json();
+        return setError(errorData.error);
       }
 
       setSuccessMessage("Produto adicionado com sucesso!");
@@ -115,7 +116,7 @@ function Produtos({ apiUrl, email, id }: GetEmpresa) {
       getProdutos();
     } catch (error) {
       console.error(error);
-      setError("Erro ao adicionar produto.");
+
     }
   };
 
@@ -211,9 +212,9 @@ function Produtos({ apiUrl, email, id }: GetEmpresa) {
                 </Button>
               </form>
               {successMessage && (
-                <p className="text-green-500">{successMessage}</p>
+                <p className="text-green-500 mt-3">{successMessage}</p>
               )}
-              {error && <p className="text-red-500">{error}</p>}
+              {error && <p className="text-red-500 mt-3">{error}</p>}
             </CardContent>
             <CardFooter>
               <Button
@@ -233,7 +234,7 @@ function Produtos({ apiUrl, email, id }: GetEmpresa) {
         </p>
 
         {produtos && produtos.length > 0 ? (
-          <ProdutosComponent data={produtos} /> 
+          <ProdutosComponent data={produtos} />
         ) : (
           <p className="text-center text-white font-bold text-2xl">
             Nenhum Produto encontrado

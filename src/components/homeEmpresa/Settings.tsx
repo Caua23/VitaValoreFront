@@ -136,7 +136,7 @@ function Configuracao({ apiUrl, id }: GetEmpresa) {
 
       <div className="flex justify-between mt-10 m-5">
         <div className="flex items-center justify-center gap-5">
-          <h2 className="font-bold text-white">Recuperar Senha</h2>
+          <h2 className="font-bold text-white">Trocar Senha</h2>
         </div>
         <Dialog>
           <DialogTrigger>
@@ -144,12 +144,12 @@ function Configuracao({ apiUrl, id }: GetEmpresa) {
               variant={"outline"}
               className="w-32 bg-green-600 hover:bg-green-800 duration-500 text-white text-xs hover:text-white"
             >
-              Recuperar Senha
+              Trocar Senha
             </Button>
           </DialogTrigger>
           <DialogContent className="bg-black text-white">
             <DialogHeader>
-              <DialogTitle>Perdeu sua senha?</DialogTitle>
+              <DialogTitle>Troque sua senha</DialogTitle>
               <DialogDescription>Troque ela facilmente:</DialogDescription>
             </DialogHeader>
 

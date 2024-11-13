@@ -13,6 +13,8 @@ import {
   BarChart3,
   LayoutDashboard,
   Settings,
+  Plane,
+  SwatchBook,
 } from "lucide-react";
 import Produtos from "@/components/homeEmpresa/produtos";
 import Rendimentos from "@/components/homeEmpresa/Rendimentos";
@@ -20,6 +22,7 @@ import Configuracao from "@/components/homeEmpresa/Settings";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import Planos from "@/components/homeEmpresa/Planos";
 
 const Perguntas = [
   {
@@ -132,6 +135,9 @@ function HomeEmpresa() {
       "/Empresa/Pergunta/-1": "/Empresa/statistics",
       "/Empresa/Pergunta/": "/Empresa/statistics",
       "/Empresa/Statistics": "/Empresa/statistics",
+      "/Empresa/Plano": "/Empresa/planos",
+      "/Empresa/plano": "/Empresa/planos",
+      "/Empresa/Planos": "/Empresa/planos",
     };
 
     const targetPath = redirectMap[location.pathname];
@@ -194,13 +200,13 @@ function HomeEmpresa() {
           path="/Empresa/statistics"
           active={location.pathname === "/Empresa/statistics"}
         />
-        {/* <SidebarItem
-          icon={<Package size={20} />}
-          text="Envios"
+         <SidebarItem
+          icon={<SwatchBook size={20} />}
+          text="Planos"
           alert
-          path="/Empresa/envios"
-          active={location.pathname === "/Empresa/envios"}
-        /> */}
+          path="/Empresa/planos"
+          active={location.pathname === "/Empresa/planos"}
+        /> 
         <SidebarItem
           icon={<Receipt size={20} />}
           text="Rendimento"
@@ -262,16 +268,16 @@ function HomeEmpresa() {
               />
             }
           />
-          {/* <Route path="envios"
+          <Route path="Planos"
             element={
-              <Envios
+              <Planos
                 id={id}
                 wallet={wallet}
                 nome={nameEmpresa}
                 email={emailEmpresa}
                 cnpj={cnpj}
                 apiUrl={apiUrlEnviar} />
-            } /> */}
+            } /> 
           <Route
             path="rendimento"
             element={
