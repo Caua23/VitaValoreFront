@@ -1,5 +1,6 @@
+import { GetEmpresa } from "@/interface/GetEmpresa";
 
-function Planos() {
+function Planos({ }: GetEmpresa) {
     return (
         <div>Planos</div>
     )
