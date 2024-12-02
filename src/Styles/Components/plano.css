@@ -1,0 +1,9 @@
+.preco{
+    display: block;
+    background-color: aqua;
+}
+#all{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

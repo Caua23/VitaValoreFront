@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
-import { Alert } from "@mui/material";
+
 
 function FormLogin() {
     const [email, setEmail] = useState('');
@@ -41,8 +41,7 @@ function FormLogin() {
                     navigate('/Empresa/Home');
                 }
             } else {
-                // Erro no login
-                <Alert severity="error">{responseText}</Alert>
+                setErrorMessage(responseText);
                 
             }
         } catch (error) {
@@ -76,9 +75,8 @@ function FormLogin() {
                         required
                     />
                 </div>
-
+                <p className="error duration-200">{errorMessage}</p>
                 <p>Não tem uma conta? <a href="/auth/register" className="register underline text-white hover:text-purple-primary duration-500">Cadastre-se</a></p>
-                <p className="error">{errorMessage}</p>
                 <button type="submit" className="submit-button">Entrar</button>
             </form>
         </div>
