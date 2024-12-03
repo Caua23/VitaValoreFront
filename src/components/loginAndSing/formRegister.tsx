@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import InputCnpj from '../CnpjInput';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { Alert } from '@mui/material';
+
 
 function FormRegister() {
     const [name, setNome] = useState('');
@@ -41,11 +41,11 @@ function FormRegister() {
                 Cookies.set('Bearer', token, { path: '/', sameSite: 'Lax', expires: 15 });
                 navigate('/Empresa/Home');
             } else {
-                <Alert severity="error">{responseText}</Alert>
+                setErrorMessage(responseText)
             }
         } catch (error) {
             console.error("Erro na requisição:", error);
-            setErrorMessage('Erro ao realizar o registro. Tente novamente.'); // Mensagem genérica de erro
+            setErrorMessage('Erro ao realizar o registro. Tente novamente.');
         }
     };
 
@@ -98,8 +98,8 @@ function FormRegister() {
                 </div>
 
                 <div>
+                    <p id='error' className='error duration-200'>{errorMessage}</p>
                     <p>Já possui conta? <a href="/auth/login" className="login text-white underline hover:text-purple-primary duration-500">faça login</a></p>
-                    <p id='error' className='error'>{errorMessage}</p>
                     <button type="submit" className="submit-button">Registrar</button>
                 </div>
             </form>
