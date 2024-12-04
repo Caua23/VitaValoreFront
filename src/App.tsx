@@ -5,18 +5,20 @@ import LoginPage from "./pages/loginPage";
 import HomeEmpresa from "./pages/HomeEmpresa";
 import ProtectedRoute from "./components/ProtectedRoute";
 import TermsOfService from "./pages/Termos";
+import Pagamento from "./pages/Pagamento";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Rotas públicas */}
+        
         <Route path="/" element={<HomePage />} />
         <Route path="/auth/register" element={<SignInPage />} />
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/Termos" element={<TermsOfService />} />
 
-        {/* Rotas protegidas */}
+        <Route path="/Planos/:id/:planoName" element={<Pagamento  />} />
+
         <Route
           path="/Empresa/*"
           element={
