@@ -3,8 +3,46 @@ import { SetStateAction, useState } from "react";
 import Radio, { RadioGroup } from "./plano/Radio";
 import { BadgePercent, Sparkle, Gem, Crown, ArrowRight } from "lucide-react"
 import '../../Styles/Components/plano.css'
-function Planos({ }: GetEmpresa) {
+import { useNavigate } from 'react-router-dom';
+import Cookies from "js-cookie";
+
+
+const navigate = useNavigate();
+function Planos({ id, apiUrl }: GetEmpresa) {
     const [plan, setPlan] = useState("");
+    let planoEscolhido = plan.trim().replace(/\s+/g, '');
+    const handleRedirecionar = async () => {
+
+        const token = Cookies.get("Bearer");
+        if (!token) {
+            Cookies.remove("Bearer");
+            console.error("Token ausente");
+            navigate("/auth/login");
+            return null;
+        }
+
+        const response = await fetch(
+            `${apiUrl}/Planos/${id}/${planoEscolhido}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Erro ao processar o plano");
+        }
+
+        const data = await response.json();
+        console.log('Resposta do backend:', data);
+
+        
+        navigate(`/Planos/${id}/${planoEscolhido}/pagamento`);
+
+    };
     return (
 
         <main className="min-h-screen flex flex-col items-center justify-center">
@@ -48,16 +86,21 @@ function Planos({ }: GetEmpresa) {
                 </div>
             </RadioGroup>
             <hr className="my-3 w-56" />
+
+
             <button
+                onClick={handleRedirecionar}
                 className={`
             flex gap-4 items-center px-6 py-3 rounded-lg
             bg-violet-800 hover:bg-violet-700
             font-semibold text-lg text-white
         `}
             >
+
                 Prossiga com o plano {plan}
                 <ArrowRight />
             </button>
+
         </main>
     )
 }
