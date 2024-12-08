@@ -1,16 +1,20 @@
 import { GetEmpresa } from "@/interface/GetEmpresa";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import Radio, { RadioGroup } from "./plano/Radio";
 import { BadgePercent, Sparkle, Gem, Crown, ArrowRight } from "lucide-react"
 import '../../Styles/Components/plano.css'
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
+import {PlanProps} from "../../interface/PlanProps";
+import { Alert } from "@mui/material";
 
-
-const navigate = useNavigate();
 function Planos({ id, apiUrl }: GetEmpresa) {
+    const navigate = useNavigate();
     const [plan, setPlan] = useState("");
+    const [alertMessage, setAlertMessage] = useState<string>("");
     let planoEscolhido = plan.trim().replace(/\s+/g, '');
+    
+    
     const handleRedirecionar = async () => {
 
         const token = Cookies.get("Bearer");
@@ -20,11 +24,11 @@ function Planos({ id, apiUrl }: GetEmpresa) {
             navigate("/auth/login");
             return null;
         }
-
+        const idPlano = PlanSelected(planoEscolhido);
         const response = await fetch(
-            `${apiUrl}/Planos/${id}/${planoEscolhido}`,
+            `${apiUrl}/Planos/Atualizar/${idPlano}/${id}`,
             {
-                method: "GET",
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                     authorization: `Bearer ${token}`,
@@ -36,16 +40,46 @@ function Planos({ id, apiUrl }: GetEmpresa) {
             throw new Error("Erro ao processar o plano");
         }
 
-        const data = await response.json();
-        console.log('Resposta do backend:', data);
 
+        setAlertMessage("Plano Atualizado com sucesso.");
         
-        navigate(`/Planos/${id}/${planoEscolhido}/pagamento`);
-
     };
+    function PlanSelected(planoEscolhido: string) {
+        switch (planoEscolhido) {
+            case 'basico':
+                return 1;
+            case 'PlanoAvancado':
+                return 2;
+            case 'PlanoPremium':
+                return 3;
+            case 'PlanoPersonalizado':
+                return 4;
+            default:
+                return 0; 
+        }
+        
+    }
+    useEffect(() => {
+        if (alertMessage) {
+          const timer = setTimeout(() => {
+            setAlertMessage("");
+          }, 50000);
+    
+          return () => clearTimeout(timer);
+        }
+      }, [alertMessage]);
     return (
 
         <main className="min-h-screen flex flex-col items-center justify-center">
+            {alertMessage && (
+        <Alert
+          className="alert-slide-in alert-fixed"
+          severity="success"
+          onClose={() => setAlertMessage("")}
+        >
+          {alertMessage}
+        </Alert>
+      )}
             <h2 className="text-2xl font-bold tracking-tight">Escolha seu Plano</h2>
             <hr className="my-3 w-56" />
             <RadioGroup value={plan} onChange={(e: { target: { value: SetStateAction<string>; }; }) => setPlan(e.target.value)}>
@@ -107,7 +141,7 @@ function Planos({ id, apiUrl }: GetEmpresa) {
 
 
 
-function Plan({ icon, title, features, price }: any) {
+function Plan({ icon, title, features, price }: PlanProps   ) {
     return (
         <div className="h-full flex flex-col justify-around select-none gap-4 text-center  text-black ">
             <div className=" gap-2">

@@ -10,6 +10,12 @@ export interface Product {
   quantidade?: number;
 }
 
+export interface EmpresaProdutosProps {
+  id: string;
+  
+}
+
 export interface ProdutosProps {
-  data: Product[]; 
+  data: Product[];
+  EmpresaProdutosProps: EmpresaProdutosProps; 
 }

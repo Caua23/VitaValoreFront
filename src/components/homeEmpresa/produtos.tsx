@@ -6,19 +6,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
+import { ArrowRight, Plus } from "lucide-react";
 import { Product } from "@/interface/ProdutosProps";
 import { GetEmpresa } from "@/interface/GetEmpresa";
 
-function Produtos({ apiUrl, email, id }: GetEmpresa) {
+function Produtos({ apiUrl, id }: GetEmpresa) {
+
+
+
   const navigate = useNavigate();
   const [produtos, setProdutos] = useState<Product[]>([]);
-
+  
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [novoProduto, setNovoProduto] = useState({
-    email: email,
+    idEmpresa: id,
     name: "",
     preco: "",
     imagem: "",
@@ -75,13 +78,14 @@ function Produtos({ apiUrl, email, id }: GetEmpresa) {
   const handleAddProductClick = () => setIsModalOpen(true);
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    
     setNovoProduto({
       name: "",
       preco: "",
       imagem: "",
       descricao: "",
       marca: "",
-      email: "",
+      idEmpresa: id,
     });
     setDescricaoLength(0);
     setSuccessMessage("");
@@ -94,7 +98,7 @@ function Produtos({ apiUrl, email, id }: GetEmpresa) {
     setNovoProduto((prev) => ({ ...prev, [name]: updatedValue }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const sendProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await fetch(`${apiUrl}/Produtos/Cadastrar`, {
@@ -132,12 +136,23 @@ function Produtos({ apiUrl, email, id }: GetEmpresa) {
     <>
       <div className="flex justify-between mt-5">
         <h1 className="text-center text-white font-bold text-3xl">Produtos</h1>
+        <div>
+
         <Button
           className="bg-green-500 hover:bg-green-700 duration-500 p-5 text-white font-bold mr-10"
           onClick={handleAddProductClick}
         >
           <Plus size={15} strokeWidth={4} /> Adicionar Produtos
         </Button>
+        <Button
+          className="bg-transparent rounded-full hover:bg-neutral-500 duration-500 p-5 text-white font-bold mr-10"
+          onClick={() => navigate("/Vender")}
+        >
+
+          <ArrowRight size={15} color="white" /> 
+        </Button>
+        </div>
+        
       </div>
 
       {isModalOpen && (
@@ -150,7 +165,7 @@ function Produtos({ apiUrl, email, id }: GetEmpresa) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={sendProduct} className="space-y-4">
                 <div className="space-y-1">
                   <Label htmlFor="name">Nome</Label>
                   <Input
@@ -234,7 +249,7 @@ function Produtos({ apiUrl, email, id }: GetEmpresa) {
         </p>
 
         {produtos && produtos.length > 0 ? (
-          <ProdutosComponent data={produtos} />
+          <ProdutosComponent  data={produtos}  EmpresaProdutosProps={{id: id}} />
         ) : (
           <p className="text-center text-white font-bold text-2xl">
             Nenhum Produto encontrado

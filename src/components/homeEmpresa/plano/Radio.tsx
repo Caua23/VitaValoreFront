@@ -12,7 +12,7 @@ export default function Radio({ children, ...props }) {
         transition-all ${
           value === props.value
             ? "bg-gradient-to-t  from-violet-400 to-violet-50 text-violet-800 shadow-violet-500 scale-105"
-            : "bg-neutral-100 hover:shadow-md shadow-gray-300"
+            : "bg-zinc-300 hover:shadow-md shadow-gray-300"
         }
     `}
     >
