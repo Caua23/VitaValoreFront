@@ -125,13 +125,18 @@ function Statistics({ apiUrl, id }: GetEmpresa) {
   useEffect(() => {
     const fetchTrimestral = async () => {
       const data = await trimestral();
-      const mappedData = MappingData(data);
-      setChartData({ data: mappedData });
+      if (data) {
+        const sortedData = [...data].sort((a, b) => {
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        });
+  
+        const mappedData = MappingData(sortedData); 
+        setChartData({ data: mappedData });
+      }
     };
-
-    fetchTrimestral();
+  
+    fetchTrimestral(); // Chama a função para buscar os dados
   }, []);
-
   function MappingData(data: { Avaliacao: number; Compras: number; date: string }[]) {
     return data.map((item) => {
       const mesNumero = parseInt(item.date.substring(5, 7), 10); // Extrai o mês como número

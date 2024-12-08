@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 
 function FormRegister() {
     const [name, setNome] = useState('');
+    const [fantasia, setFantasia] = useState('');
     const [email, setEmail] = useState('');
     const [cnpj, setCnpj] = useState('');
     const [password, setPassword] = useState('');
@@ -14,8 +15,8 @@ function FormRegister() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        const RegisterData = { name, email, cnpj, password };
+        setFantasia(name);
+        const RegisterData = { fantasia,name, email, cnpj, password };
         const apiUrl = import.meta.env.VITE_VITAVALORE_API_URL;
 
         if (!apiUrl) {

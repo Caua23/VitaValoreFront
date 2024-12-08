@@ -189,7 +189,7 @@ function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
         return null;
       }
       const data = JSON.parse(responseText);
-
+      
       return data;
     } catch (e) {
       console.error(e);
@@ -199,28 +199,39 @@ function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
   React.useEffect(() => {
     const fetchMostReviewed = async () => {
       const product = await maisAvaliado();
-      return product.length > 0 ? setMostReviewed(product[0].name) : null;
+      return product && product.length > 0 ? setMostReviewed(product[0].name) : null;
     };
-
+  
     const fetchVendas = async () => {
       const data = await ultimasVendas();
-      const ultimasVendasJson = MappingData(data);
-      return setUltimasVendasData(ultimasVendasJson);
+      if (data) {
+        const ultimasVendasJson = MappingData(data);
+        return setUltimasVendasData(ultimasVendasJson);
+      }
     };
+  
     const fetchMostSold = async () => {
       const product = await maisVendido();
-      return product.length > 0 ? setMoreSold(product[0][0].name) : null;
+      return product && product.length > 0 ? setMoreSold(product[0][0].name) : null;
     };
-
+  
     const fetchTrimestral = async () => {
       const data = await trimestral();
-      return setChartData(data);
+      if (data) {
+        const sortedData = [...data].sort((a, b) => {
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        });
+        return setChartData(sortedData);
+      }
     };
+  
+    // Chamadas das funções
     fetchTrimestral();
     fetchMostSold();
     fetchVendas();
     fetchMostReviewed();
   }, []);
+  
 
   function MappingData(
     data: {
@@ -257,7 +268,7 @@ function Dashboard({ id, wallet, apiUrl }: GetEmpresa) {
             <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
               <CardTitle className="text-neutral-100">Vendas do mês</CardTitle>
               <CardDescription className="text-neutral-200">
-                total de compras dos últimos 3 meses
+                total de Compras dos últimos 3 meses
               </CardDescription>
             </div>
             <div className="flex">

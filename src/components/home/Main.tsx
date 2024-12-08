@@ -17,7 +17,7 @@ function Main() {
                     <br />
                     <p>
                         Seja parte da nossa jornada.
-                        <a href="/auth/login">
+                        <a href="/auth/register">
                             <button className="ComeceAgoraButton">Comece agora!</button>
                         </a>
                     </p>

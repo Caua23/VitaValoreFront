@@ -6,17 +6,17 @@ import HomeEmpresa from "./pages/HomeEmpresa";
 import ProtectedRoute from "./components/ProtectedRoute";
 import TermsOfService from "./pages/Termos";
 import Pagamento from "./pages/Pagamento";
+import { Vendas } from "./pages/Vendas";
 
 function App() {
   return (
     <Router>
       <Routes>
-        
         <Route path="/" element={<HomePage />} />
         <Route path="/auth/register" element={<SignInPage />} />
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/Termos" element={<TermsOfService />} />
-
+        <Route path="/Vender" element={<Vendas  />} />
         <Route path="/Planos/:id/:planoName" element={<Pagamento  />} />
 
         <Route
